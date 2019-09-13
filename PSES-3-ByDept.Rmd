@@ -14,40 +14,39 @@ r.dtRESULT <- reactive({
   dtRESULT <<- dtResultsAll[as.list(r.myID())] 
   
   # .. input$showchildren: dtResultsBelow----
-
+  
+  # myID <<- r.myID()
+  
+  if (id1() == 0) {
+    dtRESULT <<- dtResultsAll[LEVEL2ID==0] %>% 
+      rbind(dtRESULT)
+  } else {
     
-    
-    # myID <<- r.myID()
-    
-    if (id1() == 0) {
-      dtRESULT <<- dtResultsAll[LEVEL2ID==0] %>% 
+    if (input$showchildren) {
+      setkeyv(dtResultsAll, PSES_ID_COLS[1:(which.min(myID)-1)])
+      
+      dtRESULT <<- dtResultsAll[as.list(myID[1:(which.min(myID)-1)])] %>% 
         rbind(dtRESULT)
-    } else {
-      
-      if (input$showchildren) {
-        setkeyv(dtResultsAll, PSES_ID_COLS[1:(which.min(myID)-1)])
-        
-        dtRESULT <<- dtResultsAll[as.list(myID[1:(which.min(myID)-1)])] %>% 
-          rbind(dtRESULT)
-      }
-      
-      # .. input$showparents: dtResultsAbove----
-      if (T) { #input$showparents) {
-        
-        dtRESULT <<- dtResultsAll[
-          (LEVEL1ID == 0 | LEVEL1ID == myID[1] ) & 
-            (LEVEL2ID == 0 | LEVEL2ID == myID[2]) & 
-            (LEVEL3ID == 0 | LEVEL3ID == myID[3]) & 
-            (LEVEL4ID == 0 | LEVEL4ID == myID[4] )& 
-            (LEVEL5ID == 0 | LEVEL5ID == myID[5]  ) 
-          ] %>% rbind(dtRESULT)
-      }
     }
     
-    dtRESULT <<- dtRESULT %>% unique()
-    setkeyv(dtRESULT,COLS_PSES)
-    
-
+    # .. input$showparents: dtResultsAbove----
+    if (input$showparents) {
+      
+      dtRESULT <<- dtResultsAll[
+        (LEVEL1ID == 0 | LEVEL1ID == myID[1] ) & 
+          (LEVEL2ID == 0 | LEVEL2ID == myID[2]) & 
+          (LEVEL3ID == 0 | LEVEL3ID == myID[3]) & 
+          (LEVEL4ID == 0 | LEVEL4ID == myID[4] )& 
+          (LEVEL5ID == 0 | LEVEL5ID == myID[5]  ) 
+        ] %>% rbind(dtRESULT)
+    }
+  }
+  
+  dtRESULT <<- dtRESULT %>% unique()
+  setkeyv(dtRESULT,COLS_PSES)
+  
+  
+  
   #sapply(dtRESULT,typeof)
   #  dtRESULT[, SURVEYR:=as.ordered(SURVEYR)]
   
@@ -153,11 +152,11 @@ renderPlot({
     )   +
     
     annotation_raster(image_smileys, xmin = 46, xmax = 54, ymin = 0.2, ymax = 1.8) +
-    geom_vline(aes(xintercept=dtRESULT[SURVEYR==input$year & IDlevel==0]$SCORE100), linetype=4,  col="black") +
+         geom_vline(aes(xintercept=dtRESULT[SURVEYR==input$year & IDlevel==0]$SCORE100), linetype=4,  col="black") +
     
     # geom_point(aes(SCORE100, Organization, col=SURVEYR),size=10, alpha=0.2) +
     geom_label(aes(SCORE100, Organization, col=as.ordered(IDlevel),
-                   fill=as.ordered(SURVEYR),
+                    fill=as.ordered(SURVEYR),
                    label=overlay
     ), alpha=0.2) +
     # scale_fill_brewer(palette = "Blues")  +
