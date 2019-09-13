@@ -1,0 +1,45 @@
+
+
+F.A.Q. {data-orientation=rows, data-navmenu="Help"}
+=====================================  
+
+
+#### Q: What is the SCORE and how it computed ?
+
+
+ The performance is measured using the so-called *"Happy" Score*, which is the weighted ratio of Positive Responses to All Responses to a question: 
+ 
+ <!-- The Score is computed as assigning a score of 100 to the most positive response category, 75 to the second most positive response category, 50 for the middle response category, 25 to the second most negative response option, and 0 to the most negative response option.  -->
+
+$$ Score  = { 100 \cdot Strongly\ agree  + 75 \cdot Somewhat\ agree + 50\cdot Neutral + 25 \cdot Somewhat \ disagree + 0\cdot Strongly\ disagree \over 
+Strongly\ agree  + Somewhat\ agree  + Neutral + Somewhat\ disagree + Strongly\ disagree  } (\%) $$
+
+
+The score of less than 50% indicates than more people disagree than agree with the statement.
+
+
+#### Q: Will the source code be provided ?
+
+Yes, the plan is to provide the source code to promote collaborative open source data science and the use of  Canada's Open Data.
+
+
+<!-- #### Q: These are not all PSES questions. Will results to other questions be shown as well ? -->
+#### Q: Why the App does not show the results for all PSES questions ?
+
+<!-- The questions are chosen to be representative of employees attitude towards their employers:( ) 
+The iTrack App is designed specifically to measure and compare the performance of reponses related to the employer performance, as measured by the level of "happiness" of its employee, measured scale,i.e. ranging -->
+
+The number of PSES questions analyzed by iTrack is reduced for usibility reasons, so that the App can run on small screen  platforms, while capturing the essence of the PSES results.
+<!-- specifically those related the Organizational culture and performance.  -->
+The questions related to Demographics and third-parties issues (Phoenix) are currently not considered.
+Subquestions and ambigious questions are not considered either.
+The plan is to include them in future releases . 
+
+
+
+<!-- #### Q: May new features be added or other data-sets analyzed? -->
+
+<!-- Yes. Please submit your request to Developer. -->
+<!-- Any ideas on how to improve the App and which other data-sets to process are welcome. -->
+<!-- For any ideas on how to improve the App, or should you have a need to visualize or process any other data-set, Please contact the developer.  -->
+

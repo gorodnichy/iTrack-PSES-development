@@ -1,0 +1,234 @@
+
+# Make selection: {.sidebar}
+
+
+```{r input.year, echo=F}
+selectInput('year', 
+            #'Select Year:',
+            h4('Select Year:'),
+            choices = c("2018", "2017", "2014", "2011", "2008" )
+            # ,
+            # selected= c("2018" ),
+            # multiple=T
+)
+
+# redundant  - can use input$year
+r.myYear <- reactive({
+  myYear <<- input$year
+  myYear
+})
+```
+
+
+
+```{r input.question, echo=F}
+
+# randN <- runif(1,1,
+#                length(dtQuestions$Question %>% unique )) %>% round()
+
+randN <- rnorm(1,20,5) %>% round() %>% min(length(dtQuestions$Question %>% unique )) %>% max(1)
+
+selectInput('question', 
+            # "Select Question:" ,
+            h4("Select Question:") ,
+            width="100%",
+            # selected=dtQuestions[QUESTION=="Q43"]$Question,
+            selected=(dtQuestions$Question.Abbreviated %>% unique ) [randN],
+            choices = dtQuestions$Question.Abbreviated %>% unique
+)
+
+# redundant  - can use input$question But Ialso use it to update Globals
+r.myQ <- reactive({
+  myQ <<- dtQuestions[Question.Abbreviated == input$question]$QUESTION
+  myQ
+})
+
+
+
+```
+
+
+
+```{r input.dept, echo=F}
+
+if (myBYPASS_SELECTION==T) {
+  i=0
+}
+
+dept1 <- dtDepartments[LEVEL1ID!=0 &LEVEL2ID==0]$Organization %>% unique() %>% sort()
+
+selectInput('level1',
+            #sprintf("Select Department (Total=%i)", dept1 %>% length),
+            h4("Select Department:"),
+            choices = c(".ALL COMBINED.", dept1),
+            width="100%",
+            selected=".ALL COMBINED."
+)
+
+id1 <- reactive({
+  #dtDepartments[Organization %in% input$level1]$LEVEL1ID
+  ifelse(input$level1==".ALL COMBINED.", 0, dtDepartments[Organization %in% input$level1]$LEVEL1ID)
+})
+
+renderUI({
+  dept2 <- dtDepartments[LEVEL1ID == id1() & LEVEL2ID!=0 &  LEVEL2ID!=999 &  LEVEL3ID==0]$Organization %>% unique() %>%  sort()
+  selectInput('level2', sprintf("Next level (Total=%i)", dept2 %>% length),
+              choices = c(".ALL COMBINED.", dept2),
+              selected=".ALL COMBINED."
+  )
+})
+
+id2<- reactive({
+  #dtDepartments[Organization %in% input$level2]$LEVEL2ID
+  ifelse(input$level2==".ALL COMBINED.", 0, dtDepartments[Organization %in% input$level2]$LEVEL2ID)
+})
+
+renderUI({
+  dept3 <- dtDepartments[LEVEL1ID == id1() & LEVEL2ID == id2() &  LEVEL3ID!=0 & LEVEL4ID==0]$Organization %>% unique() %>% sort()
+  selectInput('level3',  sprintf("Next Level (Total=%i)", dept3 %>% length),
+              choices = c(".ALL COMBINED.", dept3),
+              selected=".ALL COMBINED."
+  )
+})
+
+
+id3 <- reactive({
+  ifelse(input$level3==".ALL COMBINED.", 0, dtDepartments[Organization %in% input$level3]$LEVEL3ID)
+})
+
+renderUI({
+  dept4 <- dtDepartments[LEVEL1ID == id1() & LEVEL2ID == id2() & LEVEL3ID == id3() & LEVEL4ID!=0 & LEVEL5ID==0]$Organization %>% unique() %>% sort()
+  selectInput('level4',  sprintf("Next Level (Total=%i)", dept4 %>% length),
+              choices = c(".ALL COMBINED.", dept4),
+              selected=".ALL COMBINED."
+  )
+})
+
+
+id4 <- reactive({
+  ifelse(input$level4==".ALL COMBINED.", 0, dtDepartments[Organization %in% input$level4]$LEVEL4ID)
+})
+
+
+# ERROR HERE: Shows  dept5 %>% length = Total 1 ???
+# TODO
+if (T) {
+  id5 <- reactive({ 0 })
+} else {
+
+  renderUI({
+    dept5 <- dtDepartments[LEVEL1ID == id1() & LEVEL2ID == id2() & LEVEL3ID == id3() &  LEVEL4ID == id4() ]$Organization %>% unique() %>% sort()
+    selectInput('level5', sprintf("Level 5. Total=%i", dept5 %>% length),
+                choices = c(".ALL COMBINED.", dept5),
+                selected=".ALL COMBINED."
+    )
+  })
+
+  id5 <- reactive({
+    ifelse(input$level5==".ALL COMBINED.", 0, dtDepartments[Organization %in% input$level5]$LEVEL5ID)
+  })
+}
+
+
+
+r.myID <- reactive({
+  myID <<- c(id1(),id2(),id3(),id4(),id5())
+  print(myID)
+  myID
+})
+
+# # redundant
+# r.myLevel <- reactive({
+#   myLevel <<-  getLevel(myID)
+#   myLevel
+# })
+
+
+
+
+# r.dtAll <- reactive({
+#   getRESULTS (id=c(id1(),id2(),id3(),id4(),id5()),
+#               nQ = dtQuestions[Theme %in% input$theme]$QUESTION,
+#               aYears=input$year)
+# })
+
+# r.dtRESULT <- reactive({
+#   setkeyv(dtAll, PSES_ID_COLS)
+#   dtAll[ as.list(r.myID())][ QUESTION==r.myQ() & SURVEYR==r.myYear()]
+
+# 
+# })
+
+
+```
+
+
+
+``` {r filterbyrank}
+sliderInput('filterbyrank',
+            "Filter by Rank (%):",
+            #h3("Filter by Rank"),
+            min=0, max=100,
+            width="100%",
+            value=c(0,100), step=10)
+```
+
+``` {r filterbygradient}
+sliderInput('filterbygradient',
+            "Filter by Improvement (%):",
+            #h3("Filter by Rank"),
+            min=-100, max=100,
+            width="100%",
+            value=c(-100,100), step=25)
+```
+
+
+
+```{r includeparentchildren}
+checkboxInput("showparents",
+              "Include hierarchy averages",
+              value=F)
+checkboxInput("showchildren",
+              "Include sub-divisions results",
+              value=F)
+
+```
+
+
+```{r sortby}
+
+radioButtons('sortby', "Sort by:",
+             choices = c("name", "score", "rank", "number of responses"),
+             inline = T,
+             selected = "name")
+```
+
+```{r overlay}
+
+radioButtons('overlay', "Overlay:",
+             choices = c("name", "score", "rank", "number of responses", "nothing"),
+             inline = T,
+             selected = "name")
+```
+
+
+```{r yearsToShow}
+# sliderInput('yearsToShow',
+#             "Years to show:",
+#             #h3("Filter by Rank"),
+#             min="2011", max="2017",
+#             value="2011", step=2)
+
+checkboxGroupInput("yearsToShow", "Compare to:",
+                   choices = c(" 2008 " = "2008",
+                               " 2011 " = "2011",
+                               " 2014 " = "2014",
+                               " 2017 " = "2017",
+                               " 2018 " = "2018"),
+                   selected = c(
+                     " 2011 " = "2011",
+                     " 2018 " = "2018"),
+                   inline= T
+)
+```
+

@@ -1,0 +1,52 @@
+
+
+<!-- Analyze using AI -->
+<!-- Compare to the past -->
+<!-- >>> Investigate -->
+
+Apply AI
+=============================================
+
+
+## Row 1 {data-height=100}
+
+###  Artificial Intelligence  functionalities (experimental)
+
+
+
+```{r input.applyAI}
+
+radioButtons("applyAI", "Select AI task:",
+                          inline = T,
+             choices = c( "Recommend  opportunities for improvement",
+                          "Detect trends and anomalies", 
+                          "Predict performance for next year"
+             )
+             
+             
+)
+```
+
+
+
+## Row 2
+
+
+### Result 
+
+
+<!-- Under development. Not available in this version.   -->
+
+<!-- Not available in Light version. --   -->
+<!-- Please conntact developer to obtain Full version. -->
+
+Not enough data for selected Department.  Please contact the developer.
+
+
+
+<!-- - Automated recommender system that identifies the best opportunities for improvement within organization. -->
+<!-- - Detection of trends and anomalities, -->
+<!-- short-term prediction and forecasting of performance. -->
+
+
+

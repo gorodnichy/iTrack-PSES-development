@@ -1,0 +1,104 @@
+
+
+
+# By Year
+
+
+
+## Row  {.tabset .tabset-fade}
+
+Not enough data for selected Department.  Please contact the developer.
+
+### Score by Question {data-height=600} 
+
+```{r plot.Questions_vs_Scores}
+
+renderPlot({
+  
+  setkeyv(dtDepartments,PSES_ID_COLS)
+  dtRESULT <<- 
+        dtPSES[ # All SURVEYR
+    # dtPSES[SURVEYR %in% input$year][
+    r.DeptSelected(), on=PSES_ID_COLS][
+      dtQuestions, on="QUESTION"]
+  
+  setkeyv(dtRESULT, PSES_ID_COLS)
+  #q <- (dtRESULT$QUESTION %>% unique)[2];q
+  for (q in dtRESULT$QUESTION %>% unique) {
+    myScore <- dtRESULT[as.list(myID)][QUESTION==q]$SCORE100; myScore
+    myRank <- dtPSES[QUESTION==q &  SCORE100 > myScore, .N] ; myRank
+    dtRESULT[QUESTION==q, ':=' (
+      RANK=dtPSES[QUESTION==q & LEVEL1ID > 0 &  SCORE100 > myScore, .N],
+      TOTAL=dtPSES[QUESTION==q & LEVEL1ID > 0, .N]       )
+      ] [, RANK100:=round(RANK/TOTAL*100)]
+    dtRESULT[QUESTION==q & IDlevel == 0, ':=' (RANK100=50)]
+  }
+  
+  
+  Questions_vs_Scores(input) +
+    
+    labs(
+      title=paste(input$year, "Public Service Employee Survey Results"), 
+      subtitle=paste0("Department: ",
+                      # "Department:", dtDepartments[as.list(myID)]$pathString, 
+                      dtDepartments[as.list(myID)]$Organization,
+                      " (Ranking percentile is indicated in the box, Public Service average is marked by cross)")
+    ) 
+})
+```
+
+### Tabular view {data-height=600} 
+
+
+#### Department:
+```{r}
+
+renderText({
+  dt <- dtDepartments[ as.list(c(id1(),id2(),id3(),id4(),id5() ) )]
+  #   dt <- dtDepartments[ .(c(id1(),id2(),id3(),id4(),id5() ) )]
+  sprintf("Level: %i. %s (%s, ID=%i.%i.%i.%.i.%i)" , 
+          dt$IDlevel, dt$Organization, dt$AADD, 
+          id1(),id2(),id3(),id4(),id5())
+})
+```
+
+#### Responses:
+```{r}
+
+DT::renderDataTable({
+  
+  # dt <- getResultsParents (id=c(id1(),id2(),id3(),id4(),id5()),
+  #                          nQ = dtQuestions[Theme %in% input$theme]$QUESTION,
+  #                          aYears=input$year) 
+  
+  DT::datatable(
+    #r.dtAll(),
+    dtRESULT[, .(SURVEYR,QUESTION,IDlevel, pathString,SCORE100,ANSCOUNT)],
+    options = list(
+      bPaginate = T,
+      pageLength = 10
+    ))
+})
+
+```
+
+
+
+
+### Sources
+
+
+- 2018 Public Service Employee Survey Results by Theme
+<!-- for Science and Engineering:    -->
+[www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bq-pq/83/200/304/418/org-eng.aspx]({data-height=50} )
+- 2017 Public Service Employee Survey Results 
+<!-- for SCIENCE AND ENGINEERING:     -->
+[www.tbs-sct.gc.ca/pses-saff/2017-2/results-resultats/bq-pq/83/002/022/026/org-eng.aspx]()
+- 2014 Public Service Employee Survey Results by Question 
+<!-- for Science and Engineering:    -->
+[www.tbs-sct.gc.ca/pses-saff/2014/results-resultats/bq-pq/83/001/250/255/org-eng.aspx]()
+- 2011 Public Service Employee Survey Organizational Results: 
+<!-- Science and Engineering:    -->
+[www.tbs-sct.gc.ca/pses-saff/2011/results-resultats/bq-pq/83/090/400/403/org-eng.aspx]()
+
+

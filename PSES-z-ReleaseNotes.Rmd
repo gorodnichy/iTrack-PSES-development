@@ -1,0 +1,38 @@
+
+Release Notes {data-orientation=rows, data-navmenu="Help"}
+=====================================  
+## Row
+
+#### Release Notes 
+
+```
+
+#### Version 1.0.3 (26 May 2019)
+
+Changed:
+  - Redesigned (By Questions, By Department, By Year) menus for easier access. 
+Added:
+  - Org. Chart tracking 
+  - Rank information, Sorting by Rank, Filter by Rank
+
+#### Version 1.0.2 (23 May 2019)
+
+Added:
+  - sorting of results by score
+  - added FAQ
+
+#### Version 1.0.1 (20 Tay 2019)
+
+Fixed / Improved: 
+  - Optimized for performance on small (mobile) screens
+Added: 
+  - Smileys :) and :(
+  - Interactive tables
+
+#### Version 1.0.0 (13 May 2019)
+
+- First fully functional and tested release with interactive graphs 
+- Full interactivity on  all levels of Organizations
+
+
+```

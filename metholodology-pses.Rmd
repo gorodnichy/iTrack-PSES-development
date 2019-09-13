@@ -1,0 +1,126 @@
+---
+#title: "Metholodology for analyzing Public Service Employee Survey results using Data Science"
+title: "Improving Public Service performance using Public Service Employee Survey and Data Science"
+
+author: "Dmitry Gorodnichy"
+date: "21/07/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Asbtract
+
+
+## Previous work
+
+
+## iTrack PSES Application
+
+
+## References
+
+2017 Public Service Employee Survey: Summary report of results for the overall public service
+http://publications.gc.ca/collections/collection_2018/sct-tbs/BT1-34-2017-eng.pdf
+
+2018 Public Service Employee Survey Results by Theme
+https://www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bd-pm/index-eng.aspx
+
+2017-2018 ANNUAL REPORT TO THEDEPUTY MINISTEROFFICE OF THE OMBUDSMAN FOR MENTAL HEALTH
+https://www.tpsgc-pwgsc.gc.ca/osm-omh/rapports-reports/pdf/2017-2018-eng.pdf
+
+
+
+https://www.lookoutnewspaper.com/public-service-employee-survey-participate/
+
+
+Public Service Employee survey: why you should participate
+
+By Lookout on Sep 27, 2017 with Comments 0
+
+2017 Public Service Employee Survey
+
+Are you a DND Public Service Employee? Would you like to influence and improve the Public Service? Would you like to express your opinion about the leadership, workforce, and work environment in the Public Service? If so, you have until Sept. 29 to complete the 2017 Public Service Employee Survey.
+
+Do you have more questions? Please see the Q&A below and visit the Public Service Employee Surveys web page at http://intranet.mil.ca/en/lets-talk/pses/index.page
+
+About the Survey
+
+The Public Service Employee Survey (PSES) provides employees the opportunity to anonymously voice their opinions about their leadership, workforce and work environment. Through the triennial PSES, employees and managers provide valuable information for senior leaders at Defence to identify areas requiring workplace improvement.
+
+The 2017 PSES will be conducted from Aug. 21 to Sept. 29, 2017 and the resultant departmental and Public Service-wide results will be released in the spring of 2018.
+
+The three-year cycle
+
+As the survey is conducted every three years, the implementation of action plans also works on a three-year cycle. Within DND, the cycle begins at year one with the survey’s release, the subsequent analysis of the results, engagement of employees, and action plan development. Over the next two years, solutions to address issues raised in the survey will be implemented, results will be communicated, annual progress reports will be submitted, and implementation results will be assessed yearly.
+
+Employees have a say
+
+Implementing workplace improvements that address the issues raised by employees in the PSES cannot happen from the top down. One of the key ways to improve Defence is through engagement with employees – by using the wealth of knowledge and experience that employees bring to the department to improve their workplace, which will benefit not only themselves, but all Canadians.
+
+How can I fill out the survey?
+
+You will receive an e-mail invitation from Statistics Canada with a unique identifier to access the online survey.
+
+How long will it take to fill out the survey?
+
+The Public Service Employee Survey takes approximately 20 to 25 minutes to complete. Employees are to be given time to complete the survey during their working hours.
+
+Are my responses confidential?
+Yes. Statistics Canada is required under the Statistics Act to protect the confidentiality of employees’ responses and ensure that no data is released that can be traced to individuals. In order to safeguard respondents’ identity and to ensure the confidentiality of responses, responses provided to the Department will always be grouped, and no data will be made available for groups of fewer than 10 respondents. Furthermore, if there are not at least 50 employees responding from a given organisational unit, results will be merged with another unit to maintain confidentiality.
+
+Responsibility…
+
+The Deputy Minister (DM) and the Chief of the Defence Staff (CDS) are committed to using the PSES results to make continuous workplace improvements, particularly in areas where less positive results were obtained.
+
+The DM is responsible for the development of the Public Service within Defence and for advancing the priorities in the Clerk of the Privy Council’s Annual Report to the Prime Minister. As such, the Treasury Board Secretariat has made it mandatory for all departments and agencies that take part in the PSES, to create action plans to address issues arising from the survey. Given that many civilians within the Defence Team are managed by military members, the CDS also has a vested interest in ensuring that CAF managers of civilians are engaged in the PSES process.
+
+What will my department do with the results?
+
+Senior management will use your organization’s PSES results to inform the development of corporate and human resources plans. Departments and agencies are invited to discuss the survey findings with their employees, and to work with them and other stakeholders to develop and put in place solutions to issues raised in the survey.
+
+Your Opinion Counts!
+
+Filed Under: Top Stories
+
+About the Author: The Lookout Newspaper can trace its history back to April 1943 when CFB Esquimalt’s first newspaper was published. Since then, Lookout has grown into the award winning source for Pacific Navy News. Leading the way towards interactive social media reach, we are a community resource newspaper growing a world wide audience.
+
+
+Some departments make use of PSES results to improve their performance
+  
+  Evaluation of Recruitment, Development and Retention Activities at Indigenous and Northern Affairs Canada
+  
+https://www.rcaanc-cirnac.gc.ca/eng/1532020262694/1542209736701?wbdisable=true
+
+  
+Assessing the 2018 Public Service Employee Survey Results  
+https://www.pipsc.ca/news-issues/announcements/assessing-2018-public-service-employee-survey-results  
+  
+  When it comes to federal workplaces, West is best
+  https://www.hilltimes.com/2019/05/29/when-it-comes-to-federal-workplaces-west-is-best/201711
+  
+  
+  <!-- Good list of references -->
+  Getting Better All the Time:Cultivating a Positive Workplace in the Public SectorAyla Boz, Maysaa Maraqa, and Madelaine Morrison
+  Carleton University
+  https://cappa.ca/wp/wp-content/uploads/2017/06/NSEC2016-GettingBetterAlltheTime.pdf
+  
+  
+Harper's dissatisfied public servant more myth than reality, new research shows
+Taylor Blewett	
+Updated: January 2, 2019
+  https://ottawacitizen.com/news/local-news/harpers-dissatisfied-public-servant-more-myth-than-reality-new-research-shows
+  
+  
+## Appendices: Data Visualization examples
+
+
+
+https://ryo-n7.github.io/visualizations/
+
+https://ikashnitsky.github.io/2019/dotplot/
+
+

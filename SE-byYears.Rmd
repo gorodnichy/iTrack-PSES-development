@@ -1,0 +1,121 @@
+
+
+<!-- # Analyze interactively -->
+# Compare by Years
+
+
+## Row   {data-height=400}
+
+<!-- {data-height=500}  -->
+
+<!-- {.tabset .tabset-fade} -->
+
+
+
+### Make Selection
+
+
+```{r}
+
+selectInput('organizationSED', 'Select Department(s) (click DEL to remove):', 
+            # choices = c("All", dtSED$Organization %>% unique()), 
+            # selected="All", #(dtSED$Organization %>% unique()), 
+            choices = c(dtSED$Organization %>% unique() ), 
+            width="100%",
+            selected=c(dtSED$Organization %>% unique())[c(1,2,5)], 
+            multiple=T 
+) 
+
+# selectInput('themeSED', 'Select theme:',
+#             choices = c("All", dtSED$Theme %>% unique()), width="100%",
+#             selected="All")
+
+
+if (T) {
+  selectInput('questionSED', 'Select Question:', 
+              width="100%", 
+              selectize = F,size=10,
+              choices = c(dtSED$strQuestion %>% unique() %>% sort(decreasing=T))
+  ) 
+  #strQuestions, width="100%") 
+}else {
+  
+  dtSED.subset<- reactive({
+    if (input$theme=="All") {
+      dtSED
+    }else{
+      dtSED[Theme == input$themeSED]
+      #     dtSED %>% dplyr::filter(Theme==input$Zone)
+    }
+  })
+  renderUI({
+    selectInput('questionSED', 'Select Question:',
+                choices = (dtSED.subset()$strQuestion ) %>% unique(),
+                #selected= "Question 43. I would recommend my department or agency as a great place to work.",
+                #selected =  ( (dtSED.subset()$strQuestion ) %>% unique() )[1],
+                width="100%")
+  })
+}
+
+dtSED0 <- reactive({
+  dtSED[strQuestion %in% input$questionSED & 
+          Organization %in% input$organizationSED, 
+        c(1:11, ncol(dtSED)),with=F]
+})
+
+
+```
+
+
+
+### Survey Results 
+
+```{r psesSED.plotQuestionByTime_lines}
+renderPlot({
+  psesSED.plotQuestionByTime_lines(dtSED0(), input$questionSED);
+})
+```
+
+## Row 2 {.tabset .tabset-fade}
+
+###  Tabulated Results {data-height=600}
+
+<!-- ### Outputs {data-width=600} -->
+
+
+```{r}
+DT::renderDataTable({
+  data <- dtSED0()
+  DT::datatable(data, options = list(
+    bPaginate = FALSE
+    #    pageLength = 10
+  ))
+})
+# renderTable({
+#   dtSED0()
+# })
+```
+
+
+
+### Sources
+
+
+- 2018 Public Service Employee Survey Results by Theme for Science and Engineering:    
+[www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bq-pq/83/200/304/418/org-eng.aspx]({data-height=50} )
+- 2017 Public Service Employee Survey Results for SCIENCE AND ENGINEERING:    
+[www.tbs-sct.gc.ca/pses-saff/2017-2/results-resultats/bq-pq/83/002/022/026/org-eng.aspx]()
+- 2014 Public Service Employee Survey Results by Question for Science and Engineering:   
+[www.tbs-sct.gc.ca/pses-saff/2014/results-resultats/bq-pq/83/001/250/255/org-eng.aspx]()
+- 2011 Public Service Employee Survey Organizational Results: Science and Engineering:   
+[www.tbs-sct.gc.ca/pses-saff/2011/results-resultats/bq-pq/83/090/400/403/org-eng.aspx]()
+
+
+
+
+<!-- Investigate: Track horizontally (Over time) 
+# Detect:Track vertically (Over Org.Chart)  
+
+-->
+
+

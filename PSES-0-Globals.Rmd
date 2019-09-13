@@ -1,0 +1,72 @@
+
+```{r GLOBAL_OpenData, include=FALSE, warning=FALSE, echo=F, cache=F}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
+
+source("PSES_functions.R")
+#source("PSES_plotFunctions.R")
+#source("readSED+QuestionMapping.R") # PSES-read-question-mapping.R")
+#readPsesData()
+#pses.selectInput()
+#input
+
+# dtSED$strQuestion <- as.character(dtSED$strQuestion)
+
+
+  dtDepartments <<- fread("dtDepartments.csv")  
+  setkeyv(dtDepartments,PSES_ID_COLS)
+  dtQuestions <<- fread("dtQuestions.csv")
+  dtQuestions <<- dtQuestions[Theme!="Phoenix & Pay issues"] 
+  setkey(dtQuestions,QUESTION)
+  
+
+if (F) { # does not work
+  dtPSES <<- fread("dtPSES.csv")
+
+  dtPSES$I <- NULL
+  dtPSES$pathString <- NULL
+  dtAll <<- dtPSES[dtDepartments, on=PSES_ID_COLS][dtQuestions, on="QUESTION"]
+  
+  dtAll$Question.Abbreviated <- NULL
+  dtAll$Organization.fullname <- NULL
+  dtAll$Question <- NULL
+  dtAll$Theme <- NULL
+  dtAll$nTheme <- NULL
+  fwrite(dtAll, "dtAll-110a.csv", sep="\t"); 
+  
+  
+} else { # works
+  
+ # dtAll <<- fread("dtAll+rank+change2011+2014.csv")  # dtAll+rank+change.csv
+    dtAll <<- fread("dtAll-110a.csv")  # dtAll+rank+change.csv
+      dtAll <<- dtAll[dtQuestions, on="QUESTION"]
+}
+
+setkeyv(dtAll,PSES_ID_COLS)
+
+
+
+```
+
+
+<!-- {data-orientation=rows, data-icon="fa-list"} -->
+
+
+<!-- ## A page setting {.sidebar} -->
+
+<!-- Local setting 1 -->
+
+<!-- Link to [Page Tri](#page-3) -->
+
+<!-- ## Column A1 -->
+
+<!-- BB -->
+
+<!-- ## Column A2 -->
+
+<!-- CC -->
+<!-- -------------------------- --> 
+
+<!-- # Header B {.tabset} -->
+
+<!-- ## Column B1 -->
+
