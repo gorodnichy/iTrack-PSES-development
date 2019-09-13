@@ -1,0 +1,183 @@
+
+
+
+  About iTrack {data-orientation=rows, data-navmenu="Help"} 
+=====================================
+
+
+####  Technical details
+
+*Name*: Public Service Employee Survey Results Interactive Tracker  (PSES iTrack)    
+*Version*: 1.0.3 (Light Version)     
+<!-- (Release date: 11 May 2019)     -->
+*Type*: Web Application. Compatible with mobile devices.    
+*URL*: https://itrack.shinyapps.io/PSES
+
+*Data source*: Public Service Employee Survey, Treasury Board of Canada Secretariat     
+*License*:  Open Government Licence - Canada 
+
+*Developer*: DG  
+*Comments/Questions*: dg@ivim.ca
+<!-- *Comments/Questions: itracker12345@gmail.com -->
+
+
+
+
+<!-- #### Our Mission
+
+To raise the awareness of  public and governments on the value of Open Data and free Open Source tools and resources being made available by the rapidly growing data science community.
+-->
+
+#### Description 
+<!-- PSES iTrack is developped to enable Government of Canada  to efficiently identify the areas for improvement using its Open Source [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results.  
+
+
+
+"The PSES iTrack application that allows one to visualize and efficiently analyze Public Service Employee Survey (PSES) results using free open source Data Science and Artificial Intelligence techniques.
+
+"PSES iTrack is an application that allows one to visualize and efficiently analyze Public Service Employee Survey (PSES) results using free open source Data Science and Artificial Intelligence techniques.
+
+The application is developped using state-of-art  Data Science and Artificial Intelligence  technologies. It makes it easy to extract and compare the PSES results across  deparments, questions and years, making it possible to efficiently identify the areas of concern and leadership within the Public Service. 
+Detailed Reports, containing PSES results for a selected Department, can be automatically generated."
+
+potentially linking them to specific 
+
+
+
+<!-- Aimed at facilitating the investigation of key sources oflow performance,the App can be used to  enable Government of Canada  to efficiently identify the areas for improvement -->
+
+
+
+<!-- It also serves to raise the awareness of  public and government on new Open Source tools and resources being made available for use by everyone by rapidly growing scientific community.  -->
+
+<!-- The PSES iTrack is developped using advanced open-source Data Science and Artificial Intelligence techniques with an objective to enable efficient analysis of [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results. 
+
+
+PSES iTrack is an application that is developed to allows one to visualize and efficiently analyze [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results using state-of-art Data Science (DS) and Artificial Intelligence (AI) techniques. 
+-->
+
+PSES iTrack is an application that allows one to visualize and efficiently analyze [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results using state-of-art Data Science (DS) and Artificial Intelligence (AI) techniques. 
+
+It makes it easy to extract and compare the PSES results across  departments, questions and years, making it possible to efficiently identify the areas of concern and leadership within the Public Service. Detailed Reports, containing PSES results for a selected Department, can be automatically generated.
+
+The App is compliant with [Scientific Integrity](https://www.canada.ca/en/treasury-board-secretariat/services/information-notice/scientific-integrity-policies.html) and [Reproducible Research](https://www.ncbi.nlm.nih.gov/books/NBK362433/) principles.
+All generated numbers and graphs  are directly linked to the source data from which they have been generated.
+
+<!-- The code for accessing the data is provided. -->
+
+
+#### Functionalities
+
+The Light Version of the App includes the following  functionalities:
+
+- Live Open Canada PSES results data upload, fusion, normalization, and validation.
+- Interactive visualization of PSES results by department,  theme and  year -  in graphical and tabular form.
+<!-- - Analysis of 35 PSES questions in 7 seven theme groups related to the organizational culture and employee's level of satisfaction -->
+<!-- - Graphical, tabular and tree representation of results -->
+<!-- - Tracking ofresults over org.chart. -->
+- Sorting of results by score and  alphabetically <!--and by ranking-->
+- Comparison of the performance by units within organizition and to Govn't of  Canada average, for each theme and question.
+<!-- - Automated search for units within organization that contribute the most for  orgnization performance score -->
+
+
+<!-- - Performance represented by Score, measured as the ratio of positive reposponses to all responses: -->
+<!-- The performance is measured using the *"Happy" Score*, which is the weighted ratio of *Positive Responses* to *All Responses* to a question. -->
+
+
+The Full Version of the App provides the following additional functionalities:
+
+- Tracking of results over time, detection of best improved and worst deteriorated.
+- Automated report generation.
+<!-- - Automated recommender system that identifies the best opportunities for improvement within organization. -->
+<!-- - Detection of trends and anomalities, short-term prediction and forecasting of performance. -->
+- Additional sets of questions, including sub-questions and demographic questions.
+<!-- - Ability to include additional PSES results data. -->
+<!-- - Extraction and saving of data. -->
+
+
+<!-- The Full Version can be requested by contacting the developer. -->
+
+<!-- Three main functionalities are currently provided by the App: -->
+
+
+<!-- 1: Detect departments and groups areas who have the best and worst working environment -->
+
+<!-- 1: Detect - detects departments and groups areas who are the best and worst performers -->
+<!-- 2: Investigate -  performance of a particular department or group over time) -->
+<!-- 3: Report (results for a particular department or group in a single document or deck) -->
+
+
+
+<!-- ####  Contact -->
+
+
+
+
+####  Acknowledlgements and Attributions
+
+The PSES iTrack application makes use of the following Open Source tools and packages:
+
+- R 
+- RStudio 
+- data.table
+- Shiny, RSconnect
+- knitr, RMarkdown
+- tidyverse, ggplot2, stringr, readxl;  lubridate, magrittr, glue 
+- data.tree, graphviz
+- tidytext, jsonlite, xml2, httr, rvest
+<!-- http://graphviz.org/documentation/ with data.tree -->
+
+
+The support of R community, specfically from stackoverfloor.com, is  gratefully acknowledged.
+
+
+
+
+References {data-orientation=rows, data-navmenu="Help"} 
+=====================================
+
+
+#### Public Service Employee Survey, Official page:   
+
+https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html
+
+
+2018 Public Service Employee Survey:
+https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey/2018.html
+
+
+#### Open Data:
+
+Main page:         
+https://open.canada.ca/data/en/dataset/a2f9e2ca-237b-4dda-ba19-d52c84844b54
+
+#### Source files:
+
+Documentation:   
+https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2018/2018_PSES_Supporting_Documentation_Document_de_r%C3%A9f%C3%A9rence_du_SAFF_2018.xlsx
+
+2018 PSES results:   
+https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2018/2018_PSES_open_dataset_Ensemble_de_donn%C3%A9es_ouvertes_du_SAFF_2018.csv
+
+2017 PSES results:  
+https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2017/2017_PSES_SAFF_Open_dataset_Ensemble_donnees_ouvertes.csv
+
+2014 PSES results:  
+https://www.canada.ca/content/dam/canada/tbs-sct/migration/psm-fpfm/modernizing-modernisation/pses-saff/data/2014-results-resultats.csv
+
+2011 PSES results:  
+http://www.tbs-sct.gc.ca/pses-saff/2011/data/PSES-SAFF2011_OverallPS.csv
+
+
+<!-- 
+for CBSA-SE only:
+#### Reports:  
+
+Text reports prepared by *Treasury Board* from these data are available here:
+[2018](www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bq-pq/83/200/304/418/org-eng.aspx), 
+[2017](www.tbs-sct.gc.ca/pses-saff/2017-2/results-resultats/bq-pq/83/002/022/026/org-eng.aspx), 
+[2014](www.tbs-sct.gc.ca/pses-saff/2014/results-resultats/bq-pq/83/001/250/255/org-eng.aspx), 
+[2011](www.tbs-sct.gc.ca/pses-saff/2011/results-resultats/bq-pq/83/090/400/403/org-eng.aspx).
+
+-->
+

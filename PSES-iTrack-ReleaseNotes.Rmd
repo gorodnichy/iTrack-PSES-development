@@ -1,0 +1,43 @@
+
+Release Notes {data-orientation=rows, data-navmenu="Help"}
+=====================================  
+## Row
+
+#### Release Notes 
+
+```
+
+#### Version 1.0.3 (26 May 2019)
+
+Changed:
+- Resigned menus for easier access
+  - main results moved the main panels: By Questions , By Department
+  - Theme and question menus removed from sidebar 
+    (to allow more space for buttons which will be added later)
+- Question menu moved to its own By Department panel
+- "Apply AI" tap removed from Light version
+  
+Fixed / Improved:  
+  - By Question graph now works. 
+    - allows sorting of score
+    - shows ranking 
+  
+Added:
+- Tracking of scores by Org. Chart 
+
+#### Version 1.0.2 (23 May 2019)
+
+- added sorting of results
+- added FAQ
+- submitted to Open Canada on 
+
+#### Version 1.0.1
+
+- added sad and happy smileys
+
+#### Version 1.0.0 (13 May 2019)
+
+First fully functional and tested release, 
+Allows full interactivity, among all levels of Organizations
+
+```

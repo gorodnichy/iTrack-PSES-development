@@ -1,0 +1,49 @@
+
+
+ <!-- Analyze using AI -->
+<!-- Compare to the past -->
+<!-- >>> Investigate -->
+
+Apply AI
+=============================================
+
+
+## Row
+
+### Make selection {data-width=300}
+
+
+#### Detect best improved 
+
+...
+
+#### Detect worst deteriorated 
+
+...
+
+#### Recommend best opportunities for improvement
+
+...
+
+#### Detect trends and anomalies
+
+...
+
+#### Predict performance for next year
+
+...
+
+
+### Result
+
+
+<!-- Not available in the Light Version.  -->
+
+Not enough data for selected Department.  Please contact the developer.
+
+
+
+
+
+
+
