@@ -20,11 +20,14 @@ The score of less than 50% indicates than more people disagree than agree with t
 
 #### Q: Will the source code be provided ?
 
-Yes, the plan is to provide the source code to promote the open source data science and the use of  Canada's Open Data.
+Yes, the plan is to provide the source code to promote collaborative open source data science and the use of  Canada's Open Data.
 
 
 <!-- #### Q: These are not all PSES questions. Will results to other questions be shown as well ? -->
 #### Q: Why the App does not show the results for all PSES questions ?
+
+<!-- The questions are chosen to be representative of employees attitude towards their employers:( ) 
+The iTrack App is designed specifically to measure and compare the performance of reponses related to the employer performance, as measured by the level of "happiness" of its employee, measured scale,i.e. ranging -->
 
 The number of PSES questions analyzed by iTrack is reduced for usibility reasons, so that the App can run on small screen  platforms, while capturing the essence of the PSES results.
 <!-- specifically those related the Organizational culture and performance.  -->

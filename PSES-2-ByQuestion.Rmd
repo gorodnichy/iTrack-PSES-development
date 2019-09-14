@@ -29,7 +29,7 @@ renderPlot({
   
   setkeyv(dtDepartments,PSES_ID_COLS)
   dtRESULT <<- dtPSES[SURVEYR %in% input$year][
-    r.DeptSelected(), on=PSES_ID_COLS][
+    r.selectDeptTree(), on=PSES_ID_COLS][
       dtQuestions, on="QUESTION"]
   
   setkeyv(dtRESULT, PSES_ID_COLS)

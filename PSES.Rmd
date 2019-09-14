@@ -23,24 +23,22 @@ runtime: shiny
 ```
 
 ```{r app-specific-constants, include=FALSE, warning=FALSE, echo=F}
-
 myQ <- "Q43"
 myQs <- c("Q43", "Q42")
 myYears <- c(2018)
 myYear <- 2018
 
-Rank.T <- 20
+Rank.T <- 20 # Rank.Threshold for autoreport  
 
-myBYPASS_SELECTION = TRUE
-myID0 = myID.SE
 
 myBYPASS_SELECTION = FALSE
-myID0 = c(0,0,0,0,0)
+
+myID0 = c(83,200,304,0,0)
 myID = myID0
 myLevel=getLevel(myID)
-
-
 ```
+
+
 
 
 <!-- ```{r PSES-iTrack-0-Title.Rmd, child = 'PSES-iTrack-0-Title.Rmd'} -->
@@ -52,47 +50,30 @@ myLevel=getLevel(myID)
 ```{r PSES-3-ByDept.Rmd, child = 'PSES-3-ByDept.Rmd'}
 ```
 
-```{r PSES-2-ByQuestion.Rmd, child = 'PSES-2-ByQuestion.Rmd'}
-```
-
-
-
-
-
-
-# By Year
-
-## Row 
-
-<!-- Not enough data for selected Department. -->
-Not enough data for selected Department.  Please contact the developer.
-
-<!-- Not available in Light version. -    -->
-<!-- Please conntact developer to obtain Full version. -->
+<!-- ```{r PSES-2-ByQuestion.Rmd, child = 'PSES-2-ByQuestion.Rmd'} -->
+<!-- ``` -->
 
 
 <!-- ```{r PSES--byYear.Rmd, child = 'PSES-4-byYear.Rmd'} -->
 <!-- ``` -->
 
 
+<!-- ```{r PSES--ai.Rmd, child = 'PSES-5-AI.Rmd'} -->
+<!-- ``` -->
 
-```{r PSES--ai.Rmd, child = 'PSES-5-AI.Rmd'}
-```
-
-```{r PSES--report.Rmd, child = 'PSES-6-Report.Rmd'}
-```
-
+<!-- ```{r PSES--report.Rmd, child = 'PSES-6-Report.Rmd'} -->
+<!-- ``` -->
 
 
-```{r PSES--end.Rmd, child = 'PSES-7-End.Rmd'}
-```
+<!-- ```{r PSES--end.Rmd, child = 'PSES-7-End.Rmd'} -->
+<!-- ``` -->
 
 
-```{r PSES--report.Rmd, child = 'PSES-8-FAQ.Rmd'}
-```
+<!-- ```{r PSES--report.Rmd, child = 'PSES-8-FAQ.Rmd'} -->
+<!-- ``` -->
 
 
-```{r PSES--ReleaseNotes.Rmd, child = 'PSES-z-ReleaseNotes.Rmd'}
-```
+<!-- ```{r PSES--ReleaseNotes.Rmd, child = 'PSES-z-ReleaseNotes.Rmd'} -->
+<!-- ``` -->
 
 

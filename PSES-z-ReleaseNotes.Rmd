@@ -10,7 +10,7 @@ Release Notes {data-orientation=rows, data-navmenu="Help"}
 #### Version 1.0.3 (26 May 2019)
 
 Changed:
-  - Resigned menus for easier access. Now the main level has: By Questions, By Department, By Year
+  - Redesigned (By Questions, By Department, By Year) menus for easier access. 
 Added:
   - Org. Chart tracking 
   - Rank information, Sorting by Rank, Filter by Rank

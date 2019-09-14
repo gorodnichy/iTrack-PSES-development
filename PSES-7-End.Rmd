@@ -7,7 +7,7 @@
 
 ####  Technical details
 
-*Name*: Public Service Employee Survey Results Interactive Tracker  (PSES iTrack)    
+*Name*: Public Service Employee Survey Results Interactive Tracker  (iTrack PSES)    
 *Version*: 1.0.3 (Light Version)     
 <!-- (Release date: 11 May 2019)     -->
 *Type*: Web Application. Compatible with mobile devices.    
@@ -54,7 +54,7 @@ potentially linking them to specific
 
 -->
 
-PSES iTrack is an application that allows one to visualize and efficiently analyze [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results using state-of-art Data Science (DS) and Artificial Intelligence (AI) techniques. 
+The iTrack  PSES is an application that allows one to visualize and efficiently analyze [Public Service Employee Survey (PSES)](https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey.html) results using state-of-art Data Science (DS) and Artificial Intelligence (AI) techniques. 
 
 It makes it easy to extract and compare the PSES results across  departments, questions and years, making it possible to efficiently identify the areas of concern and leadership within the Public Service. Detailed Reports, containing PSES results for a selected Department, can be automatically generated.
 
@@ -74,11 +74,11 @@ The Light Version of the App includes the following  functionalities:
 <!-- - Graphical, tabular and tree representation of results -->
 <!-- - Tracking ofresults over org.chart. -->
 - Sorting of results by score and  alphabetically <!--and by ranking-->
-- Comparison of the performance by units within organizition and to Govn't of  Canada average, for each theme and question.
-<!-- - Automated search for units within organization that contribute the most for  orgnization performance score -->
+- Comparison of the performance by units within organization and to Govn't of  Canada average, for each theme and question.
+<!-- - Automated search for units within organization that contribute the most for  organization performance score -->
 
 
-<!-- - Performance represented by Score, measured as the ratio of positive reposponses to all responses: -->
+<!-- - Performance represented by Score, measured as the ratio of positive responses to all responses: -->
 <!-- The performance is measured using the *"Happy" Score*, which is the weighted ratio of *Positive Responses* to *All Responses* to a question. -->
 
 
@@ -86,11 +86,12 @@ The Full Version of the App provides the following additional functionalities:
 
 - Tracking of results over time, detection of best improved and worst deteriorated.
 - Automated report generation.
-- Automated recommender system that identifies the best opportunities for improvement within organization.
-- Detection of trends and anomalities. 
-- Short-term prediction and forecasting of performance and emppoyee churns (experimental)
 - Additional sets of questions, including sub-questions and demographic questions.
 - Ability to add new PSES results data.
+- Detection of trends and anomalities. 
+- Short-term prediction and forecasting of performance and employee churns (experimental).
+- Automated recommender system that identifies the best opportunities for improvement within organization (experimental).
+
 <!-- - Extraction and saving of data. -->
 
 
@@ -112,7 +113,7 @@ The Full Version of the App provides the following additional functionalities:
 
 
 
-####  Acknowledlgements and Attributions
+####  Acknowledgements and Attributions
 
 The PSES iTrack application makes use of the following Open Source tools and packages:
 
@@ -127,7 +128,7 @@ The PSES iTrack application makes use of the following Open Source tools and pac
 <!-- http://graphviz.org/documentation/ with data.tree -->
 
 
-The support of R community, specfically from stackoverfloor.com, is  gratefully acknowledged.
+<!-- The support of R community, specfically from stackoverfloor.com, is  gratefully acknowledged. -->
 
 
 
