@@ -35,7 +35,7 @@ if (T) {
   selectInput('questionSED', 'Select Question:', 
               width="100%", 
               selectize = F,size=10,
-              choices = c(dtSED$strQuestion %>% unique() %>% sort(decreasing=T))
+              choices = c(dtSED$strQuestion %>% unique() %>% sort(decreasing=F))
   ) 
   #strQuestions, width="100%") 
 }else {
@@ -102,14 +102,16 @@ DT::renderDataTable({
 
 
 - 2018 Public Service Employee Survey Results by Theme for Science and Engineering:    
-[www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bq-pq/83/200/304/418/org-eng.aspx]({data-height=50} )
+https://www.tbs-sct.gc.ca/pses-saff/2018/results-resultats/bq-pq/83/200/304/418/org-eng.aspx
 - 2017 Public Service Employee Survey Results for SCIENCE AND ENGINEERING:    
-[www.tbs-sct.gc.ca/pses-saff/2017-2/results-resultats/bq-pq/83/002/022/026/org-eng.aspx]()
+https://www.tbs-sct.gc.ca/pses-saff/2017-2/results-resultats/bq-pq/83/002/022/026/org-eng.aspx
 - 2014 Public Service Employee Survey Results by Question for Science and Engineering:   
-[www.tbs-sct.gc.ca/pses-saff/2014/results-resultats/bq-pq/83/001/250/255/org-eng.aspx]()
+https://www.tbs-sct.gc.ca/pses-saff/2014/results-resultats/bq-pq/83/001/250/255/org-eng.aspx
 - 2011 Public Service Employee Survey Organizational Results: Science and Engineering:   
-[www.tbs-sct.gc.ca/pses-saff/2011/results-resultats/bq-pq/83/090/400/403/org-eng.aspx]()
-
+https://www.tbs-sct.gc.ca/pses-saff/2011/results-resultats/bq-pq/83/090/400/403/org-eng.aspx
+- 2008 Public Service Employee Survey Organizational Results: Innovation, Science & Technology Branch - Laboratory & Scientific Services Directorate:    
+https://www.tbs-sct.gc.ca/pses-saff/2008/results-resultats/res-eng.aspx?cd=&o1=83&o2=799&o3=702&o4=000&o5=000
+ 
 
 
 

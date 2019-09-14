@@ -1,5 +1,4 @@
 # source("PSES_functions.R")
-# Trying to fix July 6 2019
 
 # libraries & functions ------
 if (T) {
@@ -14,9 +13,7 @@ if (T) {
   #library(tibble)
   library(ggplot2)
   library(png)
-  image_smileys <- readPNG("feedback2.png")
-  library(data.tree)
-  
+
   
   getmode <- function(v) {   # mode
     uniqv <- unique(v)
@@ -41,78 +38,71 @@ if (T) {
     dt.getFor(dtDepartments, id[1:myLevel],keys=PSES_ID_COLS[1:myLevel])
     dt.getFor(dtDepartments, id[1:myLevel],upto=myLevel, keys=PSES_ID_COLS)
   }
+  
+  getIDupto <- function (id, l) {
+    # if (is.null(id))      id <-  myID
+    if(l==0) {       return(rep(0,5))     } 
+    if (l==5) {      return(id)
+    } else {      c(id[1:l],rep(0,5-l)) 
+    }
+  }
+  
+  getIDupto(c(28,34,604,10,255),3)  
+  
+  getLevel <- function(id) {
+    which.min(id) - 1
+  }
 }
 
+# my GLOBALS (x<<-a): dtPSES, dtQuestions, dtDepartments ----
+# Later all this should be renames from my* to pses.*
 
-
-# GLOBALS(<<-): dtPSES, dtQuestions, dtDepartments ----
-
-
-# TODO: Later all this should be renames from my* to pses.*
 # TODO: In Best OOP practices, this should be a Structure(aka List in R) or (better) R6 Class !!
+# 
 
-# so we'll have 
-#     pses$dtRESULTS, etc
-# pses$init <- function()  {} # CPses$ 
-# pses$init (). For now they need to be GLOBAL, so to use <<-
-
-
+# 
+# pses.init <- function()  {} # CPses$ 
+# pses.init (). For now they need to be GLOBAL, so to use <<-
 if (T) {  
   
-  PSES_ID_COLS = c("LEVEL1ID"  ,   "LEVEL2ID"    , "LEVEL3ID"   ,  "LEVEL4ID"   ,  "LEVEL5ID"  ); psesKeys = PSES_ID_COLS; COLS_PSES = PSES_ID_COLS
+  PSES_ID_COLS = c("LEVEL1ID"  ,   "LEVEL2ID"    , "LEVEL3ID"   ,  "LEVEL4ID"   ,  "LEVEL5ID"  ); psesKeys = PSES_ID_COLS
   
   bPSES_READ <- F
-  dtPSES <- data.table(); dtQuestions <- data.table(); dtDepartments <- data.table();  
-  dtAll <- data.table();
-  dtResultsAll <- data.table(); dtRESULT <- data.table();  
-  # dtDeptSelected <- data.table();  
+  dtPSES <- data.table(); dtQuestions <- data.table() 
+  dtDepartments <- data.table();  
   
-
+  myID.SE = c(83,200,304,418,0)
   myID0 = c(83,200,304,418,0)
   myID = myID0
-  myLevel=1 #getLevel(myID)
+  myLevel=getLevel(myID)
+  dtDeptSelected <- data.table();  
+  
   myQ <- "Q43"
   myQs <- c("Q43", "Q42")
   myYears <- c(2018)
   myYear <- 2018
-  myOrg <- "Science and Engineering"
+  dtRESULT <- data.table();
   
-  #TODO : change above to below 
-  my <- list();  my$ID <- myID; my$Q <- myQ; my$Year <- myYear
+  # input <- list()
+  # input$year <- myYears
+  # input$question <- dtQuestions[QUESTION==myQ]$Question.Abbreviated
   
-  input <- list()
-  pses.selectInput <- function( myID=myID0,year=2018,nQ=myQ  ){
-    input$year <<- year;
-    input$question <<- dtQuestions[QUESTION==myQ]$Question.Abbreviated
-    input$level1 <<- myID[1];
-    input$level2 <<- myID[2]
-    input$level3 <<- myID[3];
-    input$level4 <<- myID[4]; 
-    input$level5 <<- myID[5];  #".ALL COMBINED."
-    
-    input$sortby <<- "rank"
-    input$overlay <<- "number of responses"
-    input$filterbyrank <<- c(50,100)
-    input$filterbygradient <<-c(-100,100)
-    input$showparents <<- T
-    input$showchildren <<- T
-    
-  }
-  if (F) {
-    pses.selectInput (); input
-  }
   
-  my <- list()
-  my.update  <- function(){
-    my$ID <<- c(input$level1, input$level2, input$level3, input$level4, input$level5)
-    gsub(".ALL COMBINED.", "0", my$ID)
-    my$Q <<- dtQuestions[Question.Abbreviated == input$question]$QUESTION
-    my$Year <<- myYear
-    my$Org <<- myOrg
+  
+  ID2Org <- function(id=c(83,200,304,0,0)) {
+    if(nrow(dtDepartments)!=0) {
+      setkey(dtDepartments,PSES_ID_COLS)
+      return(dtDepartments[as.list(id)]$Organization)
+    }
   }
-  if (F) {
-    my.update  (); my
+  Org2ID <- function(str="Information, Science and Technology Branch") {
+    if(nrow(dtDepartments)!=0) {
+      dtDepartments[Organization == d, (psesKeys),with=F] %>% unlist;
+      #return(  dtDepartments[ Organization==str, .(LEVEL1ID, LEVEL2ID, LEVEL3ID, LEVEL4ID,LEVEL5ID) ] %>% unlist() )
+    }
   }
+  ID2Org()
+  Org2ID()
   
   
   OPEN_CANADA_URL <- "https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2018/2018_PSES_open_dataset_Ensemble_de_donn%C3%A9es_ouvertes_du_SAFF_2018.csv"
@@ -129,202 +119,44 @@ if (T) {
   
 }
 
-# PSES functions -----
-ID2IDk <- function(...) { getIDupto(...) }
-getIDupto <- function (id=myID, l=3) {
-  # if (is.null(id))      id <-  myID
-  if(l==0) {       return(rep(0,5))     } 
-  if (l==5) {      return(id)
-  } else {      c(id[1:l],rep(0,5-l)) 
-  }
-}
-getIDupto()
-getIDupto(c(28,34,604,10,255),3)  
-
-ID2IDlevel <- function(...) { getLevel(...) }
-getLevel <- function(id=myID) {
-  which.min(id) - 1
-}
-getLevel()
-
-Org2ID <- function(str=myOrg) {
-  if(nrow(dtDepartments)!=0) {
-    dtDepartments[Organization == str, (PSES_ID_COLS),with=F] %>% unlist;
-    #return(  dtDepartments[ Organization==str, .(LEVEL1ID, LEVEL2ID, LEVEL3ID, LEVEL4ID,LEVEL5ID) ] %>% unlist() )
-  }
-}
-Org2ID() 
-
-ID2Org <- function(id=myID) {
-  if(nrow(dtDepartments)!=0) {
-    setkeyv(dtDepartments,PSES_ID_COLS)
-    return(dtDepartments[as.list(id)]$Organization)
-  }
-}
-ID2Org()
-
-ID2Path <- function(id=myID) {
-  if(nrow(dtDepartments)!=0) {
-    setkeyv(dtDepartments,PSES_ID_COLS)
-    return(dtDepartments[as.list(id)]$pathString)
-  }
-}
-
-
-# getDept Children W/O (or WITH) yourself !
-getDeptChildren<- function (id = myID, depth=Inf, yourself=F){
-  if(nrow(dtDepartments)==0) return (NULL)
+readPsesData <- function ()
+{
+  dtPSES <<- fread("dtPSES.csv")
+  dtQuestions <<- fread("dtQuestions.csv")
+  dtDepartments <<- fread("dtDepartments.csv")
   
+  setkeyv(dtPSES, PSES_ID_COLS)
   setkeyv(dtDepartments, PSES_ID_COLS)
-  levelID <- dtDepartments[as.list(id)]$IDlevel
+  # WORKS
+  dtQuestions$Question.Abbreviated <- ordered(dtQuestions$Question.Abbreviated, levels = dtQuestions$Question.Abbreviated[order(dtQuestions$nTheme)])
   
-  if (levelID==0)
-    dt <- dtDepartments
-  else {
-    setkeyv(dtDepartments, PSES_ID_COLS[1:levelID])
-    dt <- dtDepartments[as.list(id[1:levelID])]
-    # OR dt <- dtDepartments[.(id[1:levelID])]  ????
-  }
-  if (!yourself) 
-    dt <- dt [level!=levelID]
-  
-  dt <- dt [level<=levelID+depth]
-  return(dt)
-}
-getDeptChildren()
-
-# getDept Parents AND yourself !
-getDeptParents <- function ( id = myID) {
-  if(nrow(dtDepartments)==0) return (NULL)
-  
-  dtDepartments[
-    (LEVEL1ID == 0 | LEVEL1ID == id[1] ) & 
-      (LEVEL2ID == 0 | LEVEL2ID == id[2]) & 
-      (LEVEL3ID == 0 | LEVEL3ID == id[3]) & 
-      (LEVEL4ID == 0 | LEVEL4ID == id[4] )& 
-      (LEVEL5ID == 0 | LEVEL5ID == id[5]  ) 
-    ] 
-}
-getDeptParents()
-
-getDeptAboveBelow <- function ( id = myID ) {
-  rbind(getDeptParents(id),getDeptChildren(id))
+  bPSES_READ <<- T
 }
 
-# TODO rename : selectDepts -> selectDeptTree Or  getDeptsAboveBelow ()
-selectDeptTree <- function ( id = myID) {
+testPsesData <- function () {
+  if (bPSES_READ == F) 
+    readPsesData()
   
-  if (  bPSES_READ==F) {
-    print('getRESULTS(): PSES data NOT initialized ! -  Please Run readPsesData()')
-    return (dtRESULT)
-  } 
+  dtPSES[c(1,.N)] %>% print; 
+  dtPSES[, .N, by = SURVEYR] %>% print #  2018 244742
   
-  myID <<- id
-  # levelID <- dtDepartments[as.list(id)]$IDlevel
-  myLevel <<- getLevel(myID)
-  # setkeyv(dtDepartments, PSES_ID_COLS)
-  # .levelID <- dtDepartments[as.list(id)]$IDlevel; 
-  # .levelID <- myLevel
+  dtQuestions[c(1,.N)] %>% print
+  dtQuestions$Theme %>% unique() %>% print#
   
-  if (myLevel==0) {
-    dtDeptSelected <<- dtDepartments 
-    return(dtDeptSelected)
-  }
-  
-  setkeyv(dtDepartments, PSES_ID_COLS[1:myLevel]) 
-  dtDeptSelected <<- 
-    
-    dtDepartments[as.list(id[1:myLevel])] %>% # get ALL children
-    
-    rbind(dtDepartments[                      # add ALL parents
-      (LEVEL1ID == 0 | LEVEL1ID == id[1] ) & 
-        (LEVEL2ID == 0 | LEVEL2ID == id[2]) & 
-        (LEVEL3ID == 0 | LEVEL3ID == id[3]) & 
-        (LEVEL4ID == 0 | LEVEL4ID == id[4] )& 
-        (LEVEL5ID == 0 | LEVEL5ID == id[5]  ) 
-      ] ) %>% unique()
-  
-  # setkeyv(dtDeptSelected, c(PSES_ID_COLS,"IDlevel"))
-  setkeyv(dtDeptSelected, c(PSES_ID_COLS))
-  
-  return(dtDeptSelected)
+  dtDepartments [c(1,.N)] %>% print
 }
 
 
+############################################################################### #
+############################################################################### #
 
-getRESULTS <- function(id = c(83,200,304,0,0), aQs=c("Q43"), aYears=c(2018),depth=1) {
-  if (  bPSES_READ==F) {
-    print('getRESULTS(): PSES data NOT initialized ! -  Please Run readPsesData()')
-    return (dtRESULT)
-  }
-  
-  selectDepts (id)
-  
-  # dtRESULT <<- dtPSES[SURVEYR %in% aYears][
-  #   selectDepts (id), on=PSES_ID_COLS][IDlevel<=levelID+depth][
-  #     dtQuestions[QUESTION %in% aQs], on="QUESTION"]
-  
-  dtRESULT <<- dtPSES[SURVEYR %in% aYears][
-    dtDeptSelected, on=PSES_ID_COLS][
-      dtQuestions[QUESTION %in% aQs], on="QUESTION"]
-  
-  # dtRESULT <<- dtRESULT 
-  
-  setkeyv(dtRESULT, c(PSES_ID_COLS, "SURVEYR", "QUESTION"))
-  
-  if (dtRESULT[.N]$IDlevel == 0)
-    dtRESULT <<-  dtRESULT[which.max(ANSCOUNT)]
-  else {
-    dtRESULT <<-  dtRESULT [, ':='(SCORE100=median(SCORE100), ANSCOUNT=max(ANSCOUNT)) ,
-                            by=.(SURVEYR,QUESTION,Organization)] %>%
-      unique(by=c("SURVEYR","QUESTION","Organization"))
-  }
-  #   
-  
-  # TO DO LATER - DO IT IN PSES !  FIX IT !!!
-  # dt <- dtRESULT [, .(SCORE100=median(SCORE100), ANSCOUNT=max(ANSCOUNT)) , 
-  #                by=.(SURVEYR,QUESTION,Organization)]
-  # setkey(dt,Organization )
-  # setkey(dtRESULT,Organization )
-  # dtRESULT <- dtRESULT [dt] 
-  # dtRESULT <- dtRESULT[, SURVEYR:Question.Abbreviated]
-  
-  
-  
-  return(dtRESULT)
-}
+############################################################################### #
+############################################################################### #
 
-
-if (F) { # NOT DONE
-  #ID2OrgTree
-  ID2OrgAboveBelow <- function(id) {
-  }
-  
-  ID2IDAboveBelow
-  selectDeptTree(myID)
-  
-  setkeyv(dtDepartments, PSES_ID_COLS[1:myLevel])    
-  
-  dtDeptSelected <<- 
-    dtDepartments[as.list(id[1:myLevel])] %>% # get ALL children
-    
-    rbind(dtDepartments[                      # add ALL parents
-      (LEVEL1ID == 0 | LEVEL1ID == id[1] ) & 
-        (LEVEL2ID == 0 | LEVEL2ID == id[2]) & 
-        (LEVEL3ID == 0 | LEVEL3ID == id[3]) & 
-        (LEVEL4ID == 0 | LEVEL4ID == id[4] )& 
-        (LEVEL5ID == 0 | LEVEL5ID == id[5]  ) 
-      ] ) %>% unique()
-  
-}
-
-
-
-#............................................................. ----
 
 createPsesDepartments <- function() {
   
-  strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
+  strUrlDocumentation2018local  <- "data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
   dtDepartments <- read_excel(strUrlDocumentation2018local, sheet=6) %>% data.table();
   
   dtDepartments
@@ -355,14 +187,42 @@ createPsesDepartments <- function() {
   dtDepartments[, .(AADD,Organization)] %>% unique() # 2177: 
   
   for (i in 1:5) dtDepartments[, AADD := str_replace (AADD, '\\(', "")] 
-  
-  dtDepartments[, AADD := str_replace (AADD, "[[:lower:]]+", "")] 
-  dtDepartments$AADD <- str_replace(dtDepartments$AADD, "[[]:punct:]]+", "")
-  
-  #for (i in 1:5) dtDepartments[, AADD := str_replace (AADD, "[:lower:]+", "")] 
-  #for (i in 1:5) dtDepartments$AADD <- str_replace(dtDepartments$AADD, "[:punct:]+", "")
-  #  dtDepartments[AADD == "I", AADD:= "N.A."]
+  for (i in 1:5) dtDepartments[, AADD := str_replace (AADD, "[:lower:]+", "")] 
+  for (i in 1:5) dtDepartments$AADD <- str_replace(dtDepartments$AADD, "[:punct:]+", "")
   dtDepartments[AADD == "I", AADD:= "N/A"]
+  
+  
+  
+  # . Build OrgChart:  CBSA-HQ-ISTB-SED  ----
+  #   # .. Add LEV_1...LEV5: 83-> CBSA 
+  if(T) {
+    
+    for (i in 1:nrow(dtDepartments))  {
+      if (dtDepartments[i,]$LEVEL2ID==999 | dtDepartments[i,]$LEVEL2ID==0)
+        next;
+      id <- dtDepartments[i, (psesKeys),with=F] %>% unlist; id
+      if (getLevel(id)==0) 
+        next
+      ll <- getLevel(id);ll
+      getIDupto(id,ll)
+      
+      #    dtDepartments[i, BB_DD:=""]
+      setkeyv(dtDepartments, psesKeys)
+      
+      
+      for (l in 1:getLevel(id)) {
+        x <- dtDepartments[as.list(getIDupto(id,l))]$AADD ; #x %>% print
+        xx <- dtDepartments[as.list(getIDupto(id,l))]$Organization.fullname %>% 
+          str_trunc(30,ellipsis = "...")
+        dtDepartments[i, paste0("LEV_", l):= x]
+        dtDepartments[i, paste0("ORG_", l):= xx]
+      }
+    }
+    
+    dtDepartments[ , pathString:=paste(LEV_1, LEV_2,LEV_3,LEV_4, sep = "/")]
+    for (i in 1:5) dtDepartments[, pathString := str_replace (pathString, '/NA', "")] 
+    
+  }
   
   
   
@@ -376,58 +236,11 @@ createPsesDepartments <- function() {
   # . factor(dtDepartments$IDlevel----
   dtDepartments$IDlevel <- factor(dtDepartments$IDlevel,  levels = order(dtDepartments$IDlevel,decreasing=T))
   
+  # . Set Key / order by Key  -----
+  setkeyv(dtDepartments, psesKeys)
   
-  
-  # . pathString: ORG_, LEV_  CBSA-HQ-ISTB-SED  ----
-  
-  if(T) {
-    
-    for (i in 1:nrow(dtDepartments))  {
-      # if (dtDepartments[i,]$LEVEL2ID==999 | dtDepartments[i,]$LEVEL2ID==0)
-      #   next;
-      id <- dtDepartments[i, (PSES_ID_COLS),with=F] %>% unlist; id
-      # if (getLevel(id)==0) 
-      #   next
-      ll <- getLevel(id);ll
-      getIDupto(id,ll)
-      
-      #    dtDepartments[i, BB_DD:=""]
-      setkeyv(dtDepartments, PSES_ID_COLS)
-      
-      for (l in 0:getLevel(id)) {
-        # for (l in 1:getLevel(id)) {
-        x <- dtDepartments[as.list(getIDupto(id,l))]$AADD ; #x %>% print
-        xx <- dtDepartments[as.list(getIDupto(id,l))]$Organization.fullname %>% 
-          str_trunc(40,ellipsis = "...")
-        dtDepartments[i, paste0("LEV_", l):= x]
-        dtDepartments[i, paste0("ORG_", l):= xx]
-      }
-    }
-    
-    dtDepartments[ , pathString:=paste(LEV_1, LEV_2,LEV_3,LEV_4, sep = "/")]
-    for (i in 1:5) dtDepartments[, pathString := str_replace (pathString, '/NA', "")] 
-    
-    # dtDepartments[IDlevel==0, pathString:="All Public Service"]
-    # dtDepartments[IDlevel==1, pathString:=AADD]
-  }
-  
-  # . Order by Key and Add order number: .I -----
-  setkeyv(dtDepartments, PSES_ID_COLS)
+  # . Add .I -----
   dtDepartments[, I:= .I]
-  
-  # .[ remove 999. ie. "I can't find my unit"] -----
-  
-  # .. Test Uniqueness of names,Org,pathString-----
-  dtDepartments %>% nrow() # [1] 2404
-  dtDepartments$Organization %>% unique() %>% length()# [1] 2177
-  dtDepartments$pathString %>% unique() %>% length()# [1] 2206 2267
-  dtDepartments$AADD %>% unique() %>% length()# [1] 1997
-  
-  samePaths <- dtDepartments[, .N, by=pathString][N>1]$pathString
-  dtDepartments[pathString %in% samePaths]
-  
-  #. [ order decreasing = T ] ----
-  # dtDepartments <- dtDepartments[order(Organization, decreasing = T)]
   
   # . Save -----
   dtDepartments[,.N];   dtDepartments %>% names
@@ -440,11 +253,12 @@ createPsesDepartments <- function() {
 if (F)
   createPsesDepartments()
 
-#.................................................... ----
+############################################################################### #
+############################################################################### #
 
 createPsesQuestions <- function() {
   
-  strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
+  strUrlDocumentation2018local  <- "data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
   dtQuestions <- read_excel(strUrlDocumentation2018local, sheet=3) %>% data.table();
   
   dtQuestions[,.N];   dtQuestions %>% names
@@ -463,10 +277,11 @@ createPsesQuestions <- function() {
     lTheme[[3]] <- list(Qs=c("Q33", "Q34", "Q36", "Q37", "Q40"), str = "Ethical Workplace")
     lTheme[[2]] <- list(Qs=c("Q41",  "Q44", "Q45", "Q64","Q65"), str = "Respectful & Healthy Workplace") #"Q42", "Q43",
     lTheme[[7]] <- list(Qs=c("Q48","Q54","Q55","Q60",'Q61'), str ="Harassment & Discrimination") #
-    
+    # lTheme[[7]] <- list(Qs=c("Q64","Q65"), str = "Healthy workplace") # ,"Q66", "Q63",
+    #lTheme[[8]] <- list(Qs=c("Q42","Q43","Q44","Q63",'Q66'), str ="Overall stress and satisfaction") # Stress and well-being.
     lTheme[[1]] <- list(Qs=c("Q42","Q43","Q44","Q63",'Q66'), str ="Stress and Overall") # Overall Environment"
     
-    lTheme[[8]] <- list(Qs=c("Q67","Q71",'Q72', "Q73"), str ="Phoenix & Pay issues") # "70"
+    #lTheme[[8]] <- list(Qs=c("Q67","Q71",'Q72', "Q73"), str ="Phoenix & Pay issues") # "70"
     
     
     
@@ -529,15 +344,9 @@ createPsesQuestions <- function() {
                                    levels = dtQuestions$Question[order(dtQuestions$nTheme)])
     dtQuestions$QUESTION <- factor(dtQuestions$QUESTION, 
                                    levels = dtQuestions$QUESTION[order(dtQuestions$nTheme)])
-    # WORKS
     dtQuestions$Question.Abbreviated <- factor(dtQuestions$Question.Abbreviated, 
                                                levels = dtQuestions$Question.Abbreviated[order(dtQuestions$nTheme)])
-    #dtQuestions[ , Question.Abbreviated := ordered(Question.Abbreviated, levels = Question.Abbreviated[order(nTheme)])  ]
     
-    
-    #dtQuestions$Question.Abbreviated <- as.character(dtQuestions$Question.Abbreviated)
-    #dtQuestions <- dtQuestions[order(QUESTION, decreasing = F)]
-    #setkey(dtQuestions, -QUESTION)
   }
   
   # . save ----
@@ -550,12 +359,11 @@ createPsesQuestions <- function() {
 if (F)
   createPsesQuestions ()
 
-#............................................................... ----
-
+############################################################################### #
 createPsesScores <- function() {
-  
+
   if (F) {  # I. Read 2018 only  ----
-    strUrl2018local <- "source-data/2018_PSES_open_dataset_Ensemble_de_données_ouvertes_du_SAFF_2018.csv"
+    strUrl2018local <- "data/2018_PSES_open_dataset_Ensemble_de_données_ouvertes_du_SAFF_2018.csv"
     dtPSES <<- fread(strUrl2018local); 
     
     if (T) { # . Keep 2018 only 
@@ -576,7 +384,7 @@ createPsesScores <- function() {
     #https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey/2018/question-number-concordance-past-surveys-2018.html
     
     if (F) {
-      strFile <- "source-data/PSES-SED-2011-2018.xls" 
+      strFile <- "data/PSES-SED-2011-2018.xls" 
       dtQmapping <- read_excel(strFile, sheet=4) %>% data.table()
       
       cols <- c("n2018", "n2017","n2017a","n2014","n2011","n2008")
@@ -599,10 +407,10 @@ createPsesScores <- function() {
     dtQmapping
     
     #. Read 2011-2018 .csv data ----
-    strUrl2018local <- "source-data/2018_PSES_open_dataset_Ensemble_de_données_ouvertes_du_SAFF_2018.csv"
-    strUrl2017local  <- "source-data/2017_PSES_SAFF_Open_dataset_Ensemble_donnees_ouvertes.csv"
-    strUrl2014local  <- "source-data/2014-results-resultats.csv"
-    strUrl2011local  <- "source-data/2011_results-resultats.csv"
+    strUrl2018local <- "data/2018_PSES_open_dataset_Ensemble_de_données_ouvertes_du_SAFF_2018.csv"
+    strUrl2017local  <- "data/2017_PSES_SAFF_Open_dataset_Ensemble_donnees_ouvertes.csv"
+    strUrl2014local  <- "data/2014-results-resultats.csv"
+    strUrl2011local  <- "data/2011_results-resultats.csv"
     
     dt2011 <- fread(strUrl2011local); dim(dt2011)# 22 cols
     dt2014 <- fread(strUrl2014local); dim(dt2014)# 23 cols
@@ -618,7 +426,7 @@ createPsesScores <- function() {
     
     #. Rename QUESTION column in 2011  so we can merge by it----
     setnames(dt2011, "V9", "QUESTION");     dt2011 %>% names
-    
+
     # . Rename question numbers in each set ----
     dt2018$QUESTION %>% unique #  Q01 2312923: 
     dt2017$QUESTION %>% unique # A_Q01 3289210:  
@@ -629,7 +437,7 @@ createPsesScores <- function() {
     dt2014[, QUESTION := QUESTION %>% substring(3)]
     dt2011[, QUESTION := QUESTION %>% substring(3)]
     
-    
+   
     
     # . * Replace question via mapping  ----
     dt2011[
@@ -652,22 +460,21 @@ createPsesScores <- function() {
     
     # . rbind them together (dt2011-2018) ----
     dtPSES <- dt2018 %>% rbind(dt2017) %>% rbind (dt2014) %>% rbind(dt2011, use.names=F)
-    
+   
     rm(dt2018);  rm(dt2017);  rm(dt2014);  rm(dt2011); 
   }
   
-  # >>> Post Process PSES #######################################################
-  ##  
+  ######################################################## #  
   dtPSES[c(1,.N)]; names(dtPSES) # 23 cols
   dtPSES %>% dim # 8181046      22
   dtPSES$QUESTION %>% unique()
   dtPSES[, .N, by = SURVEYR]
-  
+
   if (T) { # . Leave two-digit questions only  ----
     dtPSES <- dtPSES[str_length(QUESTION)<=3]
   }
   
-  if (F) { # .Leave  dtQuestions (22 or 35) only ----
+  if (F) { # 3 -  Leave  dtQuestions (22 or 35) only ----
     if (dtQuestions %>% nrow == 0) {
       print("createPsesScores(): dtQuestions has 0 rows!")
     } else {
@@ -688,7 +495,7 @@ createPsesScores <- function() {
   dtPSES %>% unique() # --> 771020 , b) 2237858 , 2237817 - 7187044
   dtPSES <- dtPSES %>% unique() 
   
-  if (T){ # . FIX dtPSES[SCORE100>100, QUESTION]----
+  if (T){ # 2. FIX dtPSES[SCORE100>100, QUESTION]----
     dtPSES[SCORE100>100, QUESTION]
     
     dtPSES [QUESTION %in% c( "Q48","Q55"), SCORE100:= ANSWER2  ]
@@ -697,44 +504,10 @@ createPsesScores <- function() {
     dtPSES[str_length(QUESTION)<=3 & SCORE100>100 , SCORE100:= 77]
   }
   
-  # >> DEAL / REMOVE UMBIGUOUS (ensure  they are sorted down !  ----
-  
-  
-  if (F) {  # not working
-    
-    # . handle multiple answers ----    
-    dtAll[ ,.N, by=.(SURVEYR,QUESTION,Organization)][N>1] # 1979: 
-    
-    
-    dtAll <<-  dtAll [, ':='(SCORE100=median(SCORE100) %>% as.integer(), ANSCOUNT=max(ANSCOUNT)) ,
-                      by=.(SURVEYR,QUESTION,Organization)]
-    dtAll <<- dtAll %>% unique(by=c("SURVEYR","QUESTION","Organization"))
-  }
-  
   dtPSES %>% nrow() # 3278338
   
-  #       # 1. WHY Many responses for the same question (cols) in x-0-0-0-0 ??? ----
-  #     
-  # ... examine the problem ----
-  # 
-  
-  if(F) { 
-    
-    #myID = c(83,0,0,0,0)
-    qq <- quote (LEVEL1ID == 83 & LEVEL2ID == 0 & LEVEL3ID == 0 & LEVEL4ID == 0 & LEVEL5ID == 0 )
-    dtPSES[eval(qq)  & SURVEYR==2018 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]
-    dtPSES[eval(qq) & SURVEYR == 2018 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)] [, .(SCORE100,ANSCOUNT)] %>% plot
-    
-    dtPSES[eval(qq)  & SURVEYR == 2017 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
-    dtPSES[eval(qq)  & SURVEYR==2017 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]
-    
-    dtPSES[eval(qq) &  LEVEL5ID == 0 & SURVEYR == 2014 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
-    dtPSES[eval(qq)  & SURVEYR==2014 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]  
-    
-    dtPSES[eval(qq) &  LEVEL5ID == 0 & SURVEYR == 2011 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
-    dtPSES[eval(qq)  & SURVEYR==2011 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]      
-    
-  }
+  # 3 - DEAL / REMOVE UMBIGUOUS (ensure  they are sorted down !  ----
+  #       # 1. WHY Many responses for the same question (cols) in x-0-0-0-0 ???
   remove_extra_rows_with0s_in_LEVELS <- function(dt) {
     
     cols <- c("LEVEL1ID" ,"LEVEL2ID" ,"LEVEL3ID" ,"LEVEL4ID", "LEVEL5ID", "QUESTION", "SURVEYR")
@@ -745,18 +518,36 @@ createPsesScores <- function() {
     setorderv(dtPSES, c(cols, "ANSCOUNT"), c(rep(1,length(cols)), -1))
     #setorder(dt0, -ANSCOUNT);        dt0 # 594 , 625 1153  0-0-0-0-0, 145
     # 
+    # ... examine the problem ----
+    if(F) { 
+      
+      #myID = c(83,0,0,0,0)
+      qq <- quote (LEVEL1ID == 83 & LEVEL2ID == 0 & LEVEL3ID == 0 & LEVEL4ID == 0 & LEVEL5ID == 0 )
+      dtPSES[eval(qq)  & SURVEYR==2018 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]
+      dtPSES[eval(qq) & SURVEYR == 2018 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)] [, .(SCORE100,ANSCOUNT)] %>% plot
+      
+      dtPSES[eval(qq)  & SURVEYR == 2017 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
+      dtPSES[eval(qq)  & SURVEYR==2017 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]
+      
+      dtPSES[eval(qq) &  LEVEL5ID == 0 & SURVEYR == 2014 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
+      dtPSES[eval(qq)  & SURVEYR==2014 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]  
+      
+      dtPSES[eval(qq) &  LEVEL5ID == 0 & SURVEYR == 2011 & QUESTION == "Q43"][order(ANSCOUNT, decreasing = T)][, .(SCORE100,ANSCOUNT)] %>% plot # 145 rows: 6228
+      dtPSES[eval(qq)  & SURVEYR==2011 & QUESTION == "Q43"][, .(.N, SCORE100, ANSCOUNT), by=cols][N>1]      
+
+    }
     
     if (T) {
-      # ...  Approach 1: Take Score from the largest ANSCOUNT. ----
-      #Alternatively, I can recompute  "SCORE100"
-      
-      
-      dtPSES %>% nrow # 771020  , 825479
-      dtPSES <<- dtPSES %>% unique(by=cols) # 83742 !!!!
-      dtPSES %>% nrow # 74558, 244885 # OR 244742 , 260204 (if  dtPSES [SURVEYR==2018])
-      dtPSES [, .N, by = SURVEYR ]
-      dtPSES [, .N, by = .(SURVEYR,QUESTION) ]
-    }
+    # ...  Approach 1: Take Score from the largest ANSCOUNT. ----
+    #Alternatively, I can recompute  "SCORE100"
+    
+
+    dtPSES %>% nrow # 771020  , 825479
+    dtPSES <<- dtPSES %>% unique(by=cols) # 83742 !!!!
+    dtPSES %>% nrow # 74558, 244885 # OR 244742 , 260204 (if  dtPSES [SURVEYR==2018])
+    dtPSES [, .N, by = SURVEYR ]
+    dtPSES [, .N, by = .(SURVEYR,QUESTION) ]
+  }
     if (F) {  # ... Approach 2: take average, median,mode or Maximum ----
     }
     
@@ -782,47 +573,15 @@ createPsesScores <- function() {
   
   dtPSES <- remove_extra_rows_with0s_in_LEVELS(dtPSES)
   
-  
-  if (F) { # no work
-    #. assign rank to each Org for each Q. at each Year ----
-    dtPSES$RANK100 <- 50
-    
-    #setkeyv(dtPSES, c("Organization", "SURVEYR", "QUESTION")
-    setkeyv(dtPSES, c(PSES_ID_COLS, "SURVEYR", "QUESTION"))
-    org  <- (dtAll$Organization %>% unique)[6];org
-    y=2018
-    q <- (dtAll$QUESTION %>% unique)[2];q
-    
-    if (F) {
-      dtAll[c(org,y,q)][,.N] # returns 33 lines (org,y, 33 questions)
-      dtAll[as.list(org,y,q)]#        the same as above 
-      dtAll[.(org,y,q)]  # returns 1 line -- CORRECT
-      dtAll[Organization == org & SURVEYR==y & QUESTION==q] # the same as above    
-    }
-    
-    for (org in dtAll[IDlevel > 0]$Organization %>% unique) {
-      for (y in dtAll[Organization == org]$SURVEYR %>% unique){
-        for (q in dtAll$QUESTION %>% unique) {
-          myScore <- dtAll[.(org,y,q)]$SCORE100; myScore
-          myRank <- dtAll[QUESTION==q & SURVEYR==y &  SCORE100 > myScore, .N] ; myRank
-          TOTAL <- dtAll[QUESTION==q & SURVEYR==y , .N]; TOTAL
-          dtAll[.(org,y,q), RANK100:=round(myRank/TOTAL*100)]
-          # set(dtAll,QUESTION==q, RANK100:=round(RANK/TOTAL*100)]
-        }
-      }
-      
-    }
-    
-    if (F) {       # . validate and save  ----
-      dtPSES[, .N, by=SURVEYR]
-      dtPSES[1:2]
-      dtPSES[LEVEL1ID==83, .N, by=.(SURVEYR, QUESTION, 
-                                    LEVEL1ID, LEVEL2ID, LEVEL3ID, LEVEL4ID, LEVEL5ID)]
-      dtPSES$QUESTION %>% unique
-    }
-    
-    fwrite(dtPSES, "dtPSES.csv", sep="\t"); 
+  if (F) {       # . validate and save  ----
+    dtPSES[, .N, by=SURVEYR]
+    dtPSES[1:2]
+    dtPSES[LEVEL1ID==83, .N, by=.(SURVEYR, QUESTION, 
+                                  LEVEL1ID, LEVEL2ID, LEVEL3ID, LEVEL4ID, LEVEL5ID)]
+    dtPSES$QUESTION %>% unique
   }
+  
+  fwrite(dtPSES, "dtPSES.csv", sep="\t"); 
 }
 #.  createPsesScores ()
 if (F)
@@ -840,463 +599,189 @@ if (F)
 # strUrl2017 <- 
 #   "https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2017/2017_PSES_SAFF_Open_dataset_Ensemble_donnees_ouvertes.csv"
 # strUrl2014 <-
-#   "https://www.canada.ca/content/dam/canada/tbs-sct/migration/psm-fpfm/modernizing-modernisation/pses-saff/source-data/2014-results-resultats.csv"
+#   "https://www.canada.ca/content/dam/canada/tbs-sct/migration/psm-fpfm/modernizing-modernisation/pses-saff/data/2014-results-resultats.csv"
 # strUrl2011 <- 
-#   "http://www.tbs-sct.gc.ca/pses-saff/2011/source-data/PSES-SAFF2011_OverallPS.csv"
+#   "http://www.tbs-sct.gc.ca/pses-saff/2011/data/PSES-SAFF2011_OverallPS.csv"
 
 #}
 
+############################################################################### #
+############################################################################### #
+# ___________________________________________________ #####
+
 
 ############################################################################### #
 ############################################################################### #
 
 
-
-
-# .......................................... -----
-
-
-
-
-plotPSES.layout <- function (input) {
-  ggplot(dtRESULT
-         # dtRESULT[SURVEYR==input$year],
-         # dtRESULT[IDlevel <=  getLevel(myID)+1],
-  )  + 
-    theme_bw() +
-    # geom_text(aes(x,y, label=":("), data=data.table(x=40,y=ySmiley/2),size=6) +
-    # geom_text(aes(x,y, label=":)"), data=data.table(x=60,y=ySmiley/2),size=6)  + 
-    scale_x_continuous(breaks=(3:9)*10, limit=c(30,90)) +
-    geom_vline(aes(xintercept=50), col="black", linetype=4) +
-    labs(
-      x="Score = Positive responses / All responses (%)",
-      y=NULL,
-      caption = paste0("Public Service Employee Survey Results\nLicense: Open Government Licence - Canada\n Generated", #  on ", format(Sys.time(), "%d %B, %Y"), 
-                       " by iTrack (https://itrack.shinyapps.io/PSES)")
-    ) 
+# getDept Children W/O (or WITH) yourself !
+getDeptChildren<- function (id = c(83,200,0,0,0), depth=Inf, yourself=F){
+  
+  if (!is.numeric(id)) 
+    id <- Org2ID(id)
+  setkeyv(dtDepartments, PSES_ID_COLS)
+  levelID <- dtDepartments[as.list(id)]$IDlevel
+  
+  if (levelID==0)
+    dt <- dtDepartments
+  else {
+    setkeyv(dtDepartments, PSES_ID_COLS[1:levelID])
+    dt <- dtDepartments[as.list(id[1:levelID])]
+    # OR dt <- dtDepartments[.(id[1:levelID])]  ????
+  }
+  if (!yourself) 
+    dt <- dt [level!=levelID]
+  
+  dt <- dt [level<=levelID+depth]
+  setkeyv(dt, PSES_ID_COLS)
+  return(dt)
 }
 
-
-################################################################### #
-plotDepts_vs_Scores <-  function(input)  {
-  
-  
-  
-  if (T) {
-    g <- plotPSES.layout(input) + 
-      
-      annotation_raster(image_smileys, xmin = 46, xmax = 54, ymin = 0.2, ymax = 1.8) +
-      geom_vline(aes(xintercept=dtRESULT[SURVEYR==input$year & IDlevel==0]$SCORE100), linetype=4,  col="black") +
-      #guides(colour = guide_legend("Public Service average")) +
-      
-      # geom_point(aes(SCORE100, Organization, col=SURVEYR),size=10, alpha=0.2) +
-      geom_label(aes(SCORE100, Organization, 
-                     label=ANSCOUNT,
-                     fill=SURVEYR
-      ), alpha=0.2) +
-      ##guides(fill = guide_legend("Theme")) + 
-      ## scale_fill_brewer(palette = "Blues")  
-      # guides(size="none") +
-      # guides(colour="none") +
-      # guides(fill="none")
-      guides(fill= guide_legend("SURVEY YEAR")) + 
-      theme(legend.position = "bottom")   
-  }
-  
-  g
+if (F) {
+  getDeptChildren(id, depth=1) %>% print
+  dtDeptChildren <- getDeptChildren(id = c(83,200,304,0,0)); dtDeptChildren; 
+  dtDeptChildren <- getDeptChildren(id = c(83,200,0,0,0)); dtDeptChildren; 
+  dtDeptChildren <- getDeptChildren(id = c(83,0,0,0,0)); dtDeptChildren; dtDeptChildren[level==2] #  BUG : H   WEDC    &&&   N/A    CRA
+  dtDeptChildren <- getDeptChildren(id = c(83,0,0,0,0,0), depth=2);dtDeptChildren
 }
 
-
-################################################################### #
-plotQuestions_vs_Scores <- function(input)  {
-  # if (dtRESULT %>% nrow == 0)
-  #   return (NULL)
-
-  g <-  plotPSES.layout()  + 
-    guides(col= guide_legend("Theme")) +  theme(legend.position = "bottom")  +    
-    annotation_raster(image_smileys, xmin = 46, xmax = 54, ymin = 0, ymax = 5) +
-    
-    geom_point(data=dtRESULT[IDlevel==getLevel(myID)],mapping=aes(SCORE100, Question.Abbreviated, col=as.ordered(Theme)) , size=7, alpha=0.8) +
-    
-    geom_label(data=dtRESULT[IDlevel==getLevel(myID)],mapping=aes(SCORE100, Question.Abbreviated, label=RANK100) ,  alpha=0.4) +
-    
-    geom_point(data=dtRESULT[IDlevel==0],mapping=aes(SCORE100, Question.Abbreviated), 
-               size=7,  shape=3, col="black") + # shape=15)
-    
-    
-    geom_point(data=dtRESULT[as.integer(IDlevel)>getLevel(myID)],mapping=aes(SCORE100, Question.Abbreviated, col=as.ordered(Theme)), size=2, alpha=0.1) 
-  # + 
-  #   
-  #   geom_point(data=dtRESULT[level==myLevel(id)+2],mapping=aes(SCORE100, Question.Abbreviated, col=as.ordered(Theme)), size=1, alpha=0.6) 
-  #   
-  #   
-  
-  # dtRESULT[ , Question.Abbreviated := as.character(Question.Abbreviated)]
-  # 
-  
-  g
-  
-}
-
-# ......................................... -----
-
-readPsesData <- function ()  {
-  # ... read *.csv ----
-  #dtPSES <<- fread("dtPSES.csv")
-  dtDepartments <<- fread("dtDepartments.csv")  
-  setkeyv(dtDepartments,PSES_ID_COLS)
-  dtQuestions <<- fread("dtQuestions.csv")
-  dtQuestions <<- dtQuestions[Theme!="Phoenix & Pay issues"] 
-  setkey(dtQuestions,QUESTION)
-  
-  #dtAll <<- fread("dtAll+rank+change2014.csv")  # dtAll+rank+change.csv
-  dtAll <<- fread("dtAll+rank+change2011+2014.csv")  # dtAll+rank+change.csv
-  
-  # dtAll[SCORE_vs_2011==0, SCORE_vs_2011:=NA] <-- THIS CAUSES PROBLEM !!
-  return (T)
-  
-  dtAll[LEVEL1ID==0 & LEVEL2ID==0 & LEVEL3ID==0 & LEVEL4ID==0 & LEVEL5ID ==0, ':='(IDlevel=0,pathString="GoC", AADD="GoC", Organization.fullname="Entire Public Service", Organization="Entire Public Service")]
-  
-  dtAll %>% names
-  
-  if (F) { # !! NO: i need this for printing !}
-    dtAll$Organization.fullname <<- NULL
-    dtAll$Organization <<- NULL
-    dtAll$Question <<- NULL
-    dtAll$Question.Abbreviated <<- NULL
-    dtAll$Theme <<- NULL
+# getDept Parents AND yourself !
+getDeptParents <- function ( id = c(83,200,304,418,0), createBB_DD=F) {
+  if (  bPSES_READ==F) {
+    print('getRESULTS(): PSES data NOT initialized ! -  Please Run readPsesData()')
+    return (dtRESULT)
   }
+  if (!is.numeric(id)) 
+    id <- Org2ID(id)
+  dt <- dtDepartments[
+    (LEVEL1ID == 0 | LEVEL1ID == id[1] ) & 
+      (LEVEL2ID == 0 | LEVEL2ID == id[2]) & 
+      (LEVEL3ID == 0 | LEVEL3ID == id[3]) & 
+      (LEVEL4ID == 0 | LEVEL4ID == id[4] )& 
+      (LEVEL5ID == 0 | LEVEL5ID == id[5]  ) 
+    ] 
+  setkeyv(dt, PSES_ID_COLS)
   
-  return (T)
-  
-  dtAll <<- dtPSES[dtDepartments, on=PSES_ID_COLS][dtQuestions, on="QUESTION"]
-  
-  
-  dtAll[is.na(AADD),.N] # 4 - related to Phoenix & Pay issues  - need to redo dtPSES to incluide Phoenix
-  dtAll <<- dtAll[!is.na(LEVEL5ID)] # 4 - related to Phoenix & Pay issues 
-  
-  dtAll[Theme=="Phoenix & Pay issues"]
-  
-  if (F) {  
-    # . handle multiple answers ---      # I found that there's no problem here:
-    dtAll[ ,.N, by=.(SURVEYR,QUESTION,LEVEL1ID,LEVEL2ID,LEVEL3ID,LEVEL4ID,LEVEL5ID)][N>1] # 0 ! 
+  if (createBB_DD) {
+    if (id[1] == 0) {dt$BB_DD <- "GoC"; return(dt)}
+    if (id[2] == 0) {dt$BB_DD <- dt$AADD; return(dt)}
     
-    dtAll[ ,.N, by=.(SURVEYR,QUESTION,Organization)][N>1] # 1979: 
-    dtAll <<-  dtAll [, ':='(SCORE100=median(SCORE100) %>% as.integer(), ANSCOUNT=max(ANSCOUNT)) ,
-                      by=.(SURVEYR,QUESTION,Organization)]
-    dtAll <<- dtAll %>% unique(by=c("SURVEYR","QUESTION","Organization"))
-    
-  }
-  
-  #... assign rank (wrt All PS & Level=1 <-- TODO) to each (Org,Q,Year) ----  
-  if (T) {
-    
-    
-    dtAll$RANK_GoC <- 50
-    dtAll$RANK_Agency <- 50
-    
-    setkey(dtAll, LEVEL1ID,LEVEL2ID,LEVEL3ID,LEVEL4ID,LEVEL5ID, SURVEYR, QUESTION)
-    
-    for (l1 in dtPSES$LEVEL1ID %>% unique()){
-      if (l1==0) next
-      for (l2 in dtPSES[LEVEL1ID==l1]$LEVEL2ID %>% unique()){
-        
-        for (l3 in dtPSES[LEVEL1ID==l1 & LEVEL2ID==l2]$LEVEL3ID %>% unique()){
-          for (l4 in dtPSES[LEVEL1ID==l1 & LEVEL2ID==l2 & LEVEL3ID==l3]$LEVEL4ID %>% unique()){
-            for (l5 in dtPSES[LEVEL1ID==l1 & LEVEL2ID==l2 & LEVEL3ID==l3 & LEVEL4ID==l4]$LEVEL5ID %>% unique()){
-              
-              for (y in dtPSES[LEVEL1ID==l1 & LEVEL2ID==l2 & LEVEL3ID==l3 & LEVEL4ID==l4 & LEVEL5ID==l5]$SURVEYR %>% unique()){
-                for (q in dtQuestions$QUESTION) {
-                  myScore <- dtAll[.(l1,l2,l3,l4,l5,y,q)]$SCORE100; myScore
-                  if (is.na(myScore)) next
-                  
-                  myRank0 <- dtAll[QUESTION==q & SURVEYR==y &  SCORE100 > myScore, .N] ; myRank0
-                  TOTAL0  <- dtAll[QUESTION==q & SURVEYR==y , .N]; TOTAL0
-                  dtAll[.(l1,l2,l3,l4,l5,y,q), RANK_GoC:=round(myRank0/TOTAL0*100)]
-                  
-                  if (l2==0) next
-                  
-                  myRank1 <- dtAll[LEVEL1ID==l1 & QUESTION==q & SURVEYR==y &  SCORE100 > myScore, .N] ; myRank1 
-                  TOTAL1 <- dtAll[LEVEL1ID==l1 & QUESTION==q & SURVEYR==y , .N]; TOTAL1
-                  dtAll[.(l1,l2,l3,l4,l5,y,q), RANK_Agency:=round(myRank1/TOTAL1*100)]
-                }
-              }
-            }
-          }
-        }
-      }
+    dt$BB_DD <- dt[1]$AADD 
+    for (i in 2:nrow(dt)) {
+      dt[i:(.N), BB_DD := paste0( BB_DD, "-", dt[i]$AADD)]  
     }
-    
+    dt$BB_DD<- gsub("PS-", "", dt$BB_DD)
+    dt[LEVEL1ID==0, BB_DD:="GoC"]
   }
-  # ... assign gradient (change) ----
-  if (F) {
+  return(dt)
+}
 
-    dtAll$NEW_OLD_SCORE <- 0L
-    sapply(dtAll,typeof)
-    #dtAll[, `NEW_OLD_SCORE`:=as.integer(`NEW_OLD_SCORE`)]
-    
-    setkeyv(dtAll,c("I","SURVEYR","QUESTION"))
-    
-    SURVEYR1 = 2018 
-    SURVEYR2 = 2014
-    
-    for (i in dtAll$I %>% unique()) {
-      for (q in dtQuestions$QUESTION) {
-        if (  nrow (dtAll[i==I & QUESTION==q & SURVEYR==SURVEYR2]) > 0 &
-              nrow (dtAll[i==I & QUESTION==q & SURVEYR==SURVEYR1]) > 0 )  {
-          old <- dtAll[i==I & QUESTION==q & SURVEYR==SURVEYR2]$SCORE100
-          new <- dtAll[i==I & QUESTION==q & SURVEYR==SURVEYR1]$SCORE100
-          dtAll[i==I & QUESTION==q & SURVEYR==SURVEYR1, NOW_vs_2014_SCORE:=new-old]
-        }
-      }
-    }
-    
-    dtAll[NEW_OLD_SCORE<0]   
-    dtAll[NOW_vs_2014_SCORE<0]   
-    dtAll[!is.na(NEW_OLD_SCORE)] 
-    
-  }
-  bPSES_READ <<- T
-  
-  # ... save dtAll----
-  
-  setnames(dtAll, "NEW_OLD_SCORE", "SCORE_vs_2011")
-  setnames(dtAll, "NOW_vs_2014_SCORE", "SCORE_vs_2014")
-  
-  # problem  appeared after Idid this:
-  if (F) {
-    dtAll[str_length(pathString)<1 & IDlevel <5] 
-    
-    #TODO ORG_1  LEV_2  ORG_2  LEV_3  ORG_3  LEV_4  ORG_4 -> LEV_5 ORG_5
-    dtAll[AADD=="N/A", pathString:="I cannot find"] 
-    dtAll[SCORE_vs_2011==0, SCORE_vs_2011:=NA]
-  }
-  
-  fwrite(dtAll, "dtAll+rank+change2011+2014.csv",  sep="\t")
+if (F) {
+  dtDeptParents <- getDeptParents(id = c(0,0,0,0,0)); dtDeptParents; 
+  dtDeptParents <- getDeptParents(id = c(83,0,0,0,0)); dtDeptParents; 
+  dtDeptParents <- getDeptParents(id = c(83,200,0,0,0),T); dtDeptParents; dtDeptParents
+  dtDeptParents <- getDeptParents(id = c(83,200,304,0,0)); dtDeptParents; 
+  dtDeptParents <- getDeptParents(id = c(83,200,304,418,0)); dtDeptParents; 
+  dtDeptParents <- getDeptParents(id = c(83,200,304,418,0), T); dtDeptParents; dtDeptParents
 }
 
 
+getDeptAboveBelow <- function ( id = c(83,200,304,0,0) ) {
+  rbind(getDeptParents(id),getDeptChildren(id))
+}
 
-
-# .......................................... -----
-# 
-# _______TEST IT _______ ####
-
-
-testPsesData <- function () {
+# TODO rename : selectDepts -> getDeptsAboveBelow ()
+selectDepts <- function ( id = c(83,200,304,0,0) ) {
   
-  # .. readPsesData() ----
-  # if (bPSES_READ == F) {
-  readPsesData() 
-  pses.selectInput ()
-  input  
-  # }
+  myID <<- id
   
-  if  (T) {
-    dtAll[, .N, by = SURVEYR] %>% print 
-    #   SURVEYR     N
-    #       <int> <int>
-    # 1:    2008   660
-    # 2:    2011  1295
-    # 3:    2014  1992
-    # 4:    2017  2372
-    # 5:    2018 68094
-    
-    dtQuestions
-    dtQuestions$Theme %>% unique() %>% print#
-    dtAll$Theme %>% unique() %>% print#
-    dtDepartments 
-    
-  }
- 
-  
-  # .. input$question ----
-  
-  # dtResultsAll <<- dtAll[QUESTION==myQ & SURVEYR==myYear]; 
-  dtResultsAll <<- dtAll[Question.Abbreviated==input$question]; 
-  
-  
-  # .. input$level1, ...  ----
-  
-  if (F) {
-    #TODO: use purrr to do it with a function for all levels
-    input$level5 <- as.integer( input$level5 ) 
-    if (is.na(input$level5)) input$level5 <- 0
-    input
-  }
-  
-  myID=c(input$level1,input$level2,input$level3,  input$level4,input$level5)
-  
-  setkeyv(dtResultsAll, PSES_ID_COLS)  
-  dtRESULT <<- dtResultsAll[as.list(myID)] 
-  dtRESULT
-  
-  # .. input$showchildren: dtResultsBelow----
-  
-  if (input$showchildren) {
-    setkeyv(dtResultsAll, PSES_ID_COLS[1:(which.min(myID)-1)])
-
-    dtRESULT <<- dtResultsAll[as.list(myID[1:(which.min(myID)-1)])] %>% 
-      rbind(dtRESULT)
-  }
-  
-  # .. input$showparents: dtResultsAbove----
-  if (input$showparents) {
-
-    dtRESULT <<- dtResultsAll[
-      (LEVEL1ID == 0 | LEVEL1ID == myID[1] ) & 
-        (LEVEL2ID == 0 | LEVEL2ID == myID[2]) & 
-        (LEVEL3ID == 0 | LEVEL3ID == myID[3]) & 
-        (LEVEL4ID == 0 | LEVEL4ID == myID[4] )& 
-        (LEVEL5ID == 0 | LEVEL5ID == myID[5]  ) 
-      ] %>% rbind(dtRESULT)
-  }
-  
-  dtRESULT <<- dtRESULT %>% unique()
-  setkeyv(dtRESULT,COLS_PSES)
-  dtRESULT
-  
-  
-  #sapply(dtRESULT,typeof)
-#  dtRESULT[, SURVEYR:=as.ordered(SURVEYR)]
-  
-  
-  # .. input$sortby -----
-  if (input$sortby =="name"){
-    dtRESULT[ , Organization := reorder(Organization, Organization)]
-    dtRESULT[ , Organization := reorder(Organization, IDlevel)]
-  } else if (input$sortby =="number of responses"){
-    dtRESULT[ , Organization := reorder(Organization, ANSCOUNT)]
-    dtRESULT[ , Organization := reorder(Organization, IDlevel)] 
-  } else if (input$sortby =="score"){
-    dtRESULT[ , Organization := reorder(Organization , -SCORE100) ]
-    dtRESULT[ , Organization := reorder(Organization , IDlevel)]
-  } else { # (input$sortby =="rank"){ 
-    dtRESULT[ , Organization := reorder(Organization , -RANK_GoC) ]
-    dtRESULT[ , Organization := reorder(Organization , IDlevel)]
+  if (  bPSES_READ==F) {
+    print('getRESULTS(): PSES data NOT initialized ! -  Please Run readPsesData()')
+    return (dtRESULT)
   } 
   
+  if (!is.numeric(id)) 
+    id <- Org2ID(id)
   
-  # .. input$overlay -----
+  myLevel <<- getLevel(myID)
+  # setkeyv(dtDepartments, PSES_ID_COLS)
+  # .levelID <- dtDepartments[as.list(id)]$IDlevel; 
+  .levelID <- myLevel
   
-  if (input$overlay =="name"){
-    dtRESULT[ , overlay := AADD]
-  } else if (input$overlay =="number of responses"){
-    dtRESULT[ , overlay := ANSCOUNT]
-  } else if (input$overlay =="score"){
-    dtRESULT[ , overlay := SCORE100]
-  } else if (input$overlay =="rank"){ 
-    dtRESULT[ , overlay := RANK_GoC]
-  } else if (input$overlay =="rankAgency"){ 
-      dtRESULT[ , overlay := RANK_Agency]
-  } else if (input$overlay =="year"){ 
-    dtRESULT[ , overlay := SURVEYR]
-  } else { #nothing
-    dtRESULT[ , overlay := ""]
+  if (.levelID==0) {
+    dtDeptSelected <<- dtDepartments 
+    return(dtDeptSelected)
   }
   
+  setkeyv(dtDepartments, PSES_ID_COLS[1:.levelID]) 
+  dtDeptSelected <<- dtDepartments[as.list(id[1:.levelID])] %>% # get children
+    rbind(
+      dtDepartments[ #get parents
+        (LEVEL1ID == 0 | LEVEL1ID == id[1] ) & 
+          (LEVEL2ID == 0 | LEVEL2ID == id[2]) & 
+          (LEVEL3ID == 0 | LEVEL3ID == id[3]) & 
+          (LEVEL4ID == 0 | LEVEL4ID == id[4] )& 
+          (LEVEL5ID == 0 | LEVEL5ID == id[5]  ) 
+        ] ) %>% unique()
   
+  setkeyv(dtDeptSelected, c(PSES_ID_COLS,"IDlevel"))
   
-  # .. filterbyrank -----
+  # put under the same name lower levels
+  #  dtDeptSelected[level>levelID+1]$Organization <- dtDeptSelected[level==levelID+1]$Organization
   
-  if (F) {
-  if (input$level3>0)  {
-    dtRESULT <<- dtRESULT [RANK_Agency< input$filterbyrank[2] & RANK_Agency >input$filterbyrank[1] ]
-  } else {
-    dtRESULT <<- dtRESULT [RANK_GoC < input$filterbyrank[2] & RANK_GoC >input$filterbyrank[1] ]
-  }
-  
-  }
-  
-  # .. filterbygradient -----  
-  if (F) {
-    dtRESULT <<- dtRESULT [SCORE_vs_2011 < input$filterbygradient[2] & SCORE_vs_2011 >input$filterbygradient[1] ]
-  }
-  
-  # .. yearsToShow -----    
-  
-  # dtRESULT <<- dtRESULT[SURVEYR == 2018 | SURVEYR == ifelse(input$yearsToShow)]
-  # 
-  
-  
-  
-  # __BY DEPARTMENTS__ --------------------------------
-  
-  plotDepts_vs_Scores(input) + 
-    labs(
-      title=dtQuestions[QUESTION == myQ]$Question, 
-      #title=paste0(input$year, " Public Service Employee Survey Results"),
-      # subtitle=paste0(dtQuestions[Question == input$question]$Question,"\n(Number of responses is indicated in the box)"),
-      subtitle=paste0(input$year, " Public Service Employee Survey Results (Number of responses is indicated in the box)")
-      # 
-      #paste("Department:", dtDepartments[as.list(myID)]$Organization, "(Number of responses is indicated in the box)"),
-      
-    )  
-  
-  
-  dt <- dtRESULT[ , .(ORG_1, ORG_2,ORG_3,ORG_4, SCORE100, sep = "/")][, pathString:=paste(ORG_1, ORG_2,ORG_3,ORG_4, SCORE100, sep = "/")] 
-  
-  dtRESULTtree <- as.Node(dt)
-  
-  print(dtRESULTtree, limit=NULL) 
-  
-  
-  
-  setkeyv(dtDepartments,COLS_PSES)
-  
-  myID=c(input$level1,input$level2,input$level3,  input$level4,input$level5)
-  
-  
-  dt <- dtDepartments[ as.list(myID )]
-  #   dt <- dtDepartments[ .(c(id1(),id2(),id3(),id4(),id5() ) )]
-  sprintf("Level: %i. %s (%s, ID=%i.%i.%i.%.i.%i)" , 
-          dt$IDlevel, dt$Organization, dt$pathString, 
-          input$level1,input$level2,input$level3,  input$level4,input$level5)
-  # id1(),id2(),id3(),id4(),id5())
-  
-  DT::datatable(
-    dtRESULT[, .(IDlevel,pathString,SURVEYR,SCORE100,ANSCOUNT)],
-    options = list(
-      bPaginate = T,
-      pageLength = 12
-    )
-  )
-  
-  
-  # __BY QUESTION__ -----------------------------------
-  
-  Questions_vs_Scores(input) +
-    
-    labs(
-      title=paste(input$year, "Public Service Employee Survey Results"), 
-      subtitle=paste0("Department: ",
-                      # "Department:", dtDepartments[as.list(myID)]$pathString, 
-                      dtDepartments[as.list(myID)]$Organization,
-                      " (Ranking percentile is indicated in the box, Public Service average is marked by cross)")
-    ) 
-  
-  
-  dt <- dtDepartments[ as.list(c(id1(),id2(),id3(),id4(),id5() ) )]
-  #   dt <- dtDepartments[ .(c(id1(),id2(),id3(),id4(),id5() ) )]
-  sprintf("Level: %i. %s (%s, ID=%i.%i.%i.%.i.%i)" , 
-          dt$IDlevel, dt$Organization, dt$AADD, 
-          id1(),id2(),id3(),id4(),id5())
-  
-  
-  DT::datatable(
-    #r.dtAll(),
-    dtRESULT[, .(SURVEYR,QUESTION,IDlevel, pathString,SCORE100,ANSCOUNT)],
-    options = list(
-      bPaginate = T,
-      pageLength = 10
-    ))
-  
+  return(dtDeptSelected)
 }
+
+
+
+getRESULTS <- function(id = c(83,200,304,0,0), aQs=c("Q43"), aYears=c(2018),depth=1) {
+  if (  bPSES_READ==F) {
+    print('getRESULTS(): PSES data NOT initialized ! -  Please Run readPsesData()')
+    return (dtRESULT)
+  }
+  
+  selectDepts (id)
+  
+  # dtRESULT <<- dtPSES[SURVEYR %in% aYears][
+  #   selectDepts (id), on=PSES_ID_COLS][IDlevel<=levelID+depth][
+  #     dtQuestions[QUESTION %in% aQs], on="QUESTION"]
+  
+  dtRESULT <<- dtPSES[SURVEYR %in% aYears][
+    dtDeptSelected, on=PSES_ID_COLS][
+      dtQuestions[QUESTION %in% aQs], on="QUESTION"]
+  
+  # dtRESULT <<- dtRESULT 
+  
+  setkeyv(dtRESULT, c(PSES_ID_COLS, "SURVEYR", "QUESTION"))
+  
+  if (dtRESULT[.N]$IDlevel == 0)
+    dtRESULT <<-  dtRESULT[which.max(ANSCOUNT)]
+  else {
+    dtRESULT <<-  dtRESULT [, ':='(SCORE100=median(SCORE100), ANSCOUNT=max(ANSCOUNT)) ,
+                            by=.(SURVEYR,QUESTION,Organization)] %>%
+      unique(by=c("SURVEYR","QUESTION","Organization"))
+  }
+    #   
+    
+    # TO DO LATER - DO IT IN PSES !  FIX IT !!!
+    # dt <- dtRESULT [, .(SCORE100=median(SCORE100), ANSCOUNT=max(ANSCOUNT)) , 
+    #                by=.(SURVEYR,QUESTION,Organization)]
+    # setkey(dt,Organization )
+    # setkey(dtRESULT,Organization )
+    # dtRESULT <- dtRESULT [dt] 
+    # dtRESULT <- dtRESULT[, SURVEYR:Question.Abbreviated]
+
+  
+  
+  return(dtRESULT)
+}
+
+
+
+# _______TEST IT _______ ####
 
 if(F) {
   readPsesData()
-  
-  
   
   dt <- getResultsParents (id=c(0,0,0,0,0), nQ = "Q43", aYears=c(2018))
   dt <- getResultsParents (id=c(83,0,0,0,0), nQ = "Q43", aYears=c(2018))
@@ -1355,6 +840,4 @@ if (F){
   plot(treePSES0)
   
 }
-
-
 

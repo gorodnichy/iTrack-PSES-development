@@ -1,0 +1,104 @@
+
+<!-- Tools {data-orientation=rows, data-navmenu="Help"} 
+Save data {data-orientation=rows, data-navmenu="Help"}
+=====================================
+
+#### Not available in Light Version
+
+
+Build Org. Chart {data-orientation=rows, data-navmenu="Help"}
+=====================================
+
+#### Not available in Light Version
+
+
+
+Settings {data-orientation=rows, data-navmenu="Help"} 
+=====================================
+
+#### Not available in Light Version
+
+```{r set.URLs, echo=F}
+
+# Error in textInput: unused argument (choices = c("Use local copy (Faster)", "Use Open Canada URL"))
+
+if (T) {
+  radioButtons('USE_LOCAL_COPY', 'Upload PSES data:',
+               choices = c("Use local copy (Faster)",
+                           "Use Open Canada URL (Slower)" ),
+               # selected = "Use local copy (Faster)",
+               inline = T,
+               width="100%")
+  rUSE_LOCAL_COPY <- reactive({input$USE_LOCAL_COPY})
+  
+  textInput('USE_URL', 'Location of PSES data:',
+            value = OPEN_CANADA_URL,
+            placeholder = OPEN_CANADA_URL,
+            width="100%")
+  
+  rUSE_URL <- reactive({input$USE_URL})
+}
+
+```
+
+
+
+### Modify Question set
+
+#### Not available in Light Version
+
+
+```{r set.questions, echo=F}
+
+if (F) {
+  radioButtons('set.questions', 'Select Question Set:',
+               choices = c("Core set (22 Questions)",
+                           "Extended set (36 Questions)",
+                           "Include demographic set(61 Questions)"
+                           # "Include   Sub-Questions (185 Questions, 2018 only)"
+               ),
+               inline = T,
+               width="100%")
+  
+  
+  
+  r.aQuestions <- reactive({
+    
+    switch(input$set.questions,
+           "Core set (22 Questions)" = aQuestions22,
+           # "Main set (39 Questions)" = dtPSES[ LEVEL1ID==0 & SURVEYR==2011, unique(QUESTION)],
+           "Extended set (43 Questions)" = dtPSES[ LEVEL1ID==0 & SURVEYR==2014 &
+                                                     str_length(QUESTION)<=3,  unique(QUESTION)], # 43 only -
+           # "Extended (50 Questions)" = dtPSES[ LEVEL1ID==0 & SURVEYR==2014, unique(QUESTION)],
+           # "Main set (55 Questions)" =    dtPSES[ LEVEL1ID==0 & SURVEYR==2017 &
+           #     str_length(QUESTION)<=3, .N, unique(QUESTION)] # 55 only
+           "Complete set (61 Questions)" = dtPSES[ LEVEL1ID==0 & SURVEYR==2018 &
+                                                     str_length(QUESTION)<=3, unique(QUESTION)]  # 61 only
+           ,
+           aQuestions22);
+    
+    # dtQuestions[QUESTION %in% aQuestions]
+  })
+  
+  
+  DT::renderDataTable({
+    data <- dtQuestions[QUESTION %in% r.aQuestions(), .(Question, Theme)] 
+    DT::datatable(data, options = list(
+      bPaginate = T,
+      pageLength = 5
+    ))
+  })
+  # 
+  # renderTable({
+  #   dtQ()
+  # })
+  # }
+  # 
+}
+
+```
+
+-->
+
+
+

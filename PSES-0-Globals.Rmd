@@ -1,39 +1,36 @@
 
-```{r GLOBAL_OpenData, include=FALSE, warning=FALSE, echo=F, cache=F}
+```{r GLOBAL_OpenData, include=FALSE, warning=FALSE, echo=F}
 # load data in 'global' chunk so it can be shared by all users of the dashboard
 
 source("PSES_functions.R")
-#source("PSES_plotFunctions.R")
-#source("readSED+QuestionMapping.R") # PSES-read-question-mapping.R")
+source("PSES_plotFunctions.R")
+source("readSED+QuestionMapping.R") # PSES-read-question-mapping.R")
 readPsesData()
-pses.selectInput()
-input
 
-# dtSED$strQuestion <- as.character(dtSED$strQuestion)
+dtSED$strQuestion <- as.character(dtSED$strQuestion)
 
+#dtQuestions$Question.Abbreviated <- as.character(dtQuestions$Question.Abbreviated)
+dtQuestions <- dtQuestions[order(QUESTION, decreasing = F)]
+
+dtDepartments[IDlevel==0, pathString:="Public Service"]
+dtDepartments[IDlevel==1, pathString:=AADD]
+# dtDepartments <- dtDepartments[order(Organization, decreasing = T)]
+
+
+if (T) { #  Error in [.data.table: Type of RHS ('double') must match LHS ('integer'). 
+  
+  # dtPSES <- dtPSES[dtDepartments]
+  # 
+  # if (dtPSES[.N]$IDlevel == 0) {
+  #   dtPSES <<-  dtPSES[which.max(ANSCOUNT)]
+  # } else {
+  #   dtPSES <<-  dtPSES [, ':='(SCORE100=median(SCORE100), ANSCOUNT=max(ANSCOUNT)) ,
+  #                       by=.(SURVEYR,QUESTION,Organization)] 
+  #   dtPSES <<- dtPSES %>% unique(by=c("SURVEYR","QUESTION","Organization"))
+  # }
+  
+}
 
 ```
 
-
-<!-- {data-orientation=rows, data-icon="fa-list"} -->
-
-
-<!-- ## A page setting {.sidebar} -->
-
-<!-- Local setting 1 -->
-
-<!-- Link to [Page Tri](#page-3) -->
-
-<!-- ## Column A1 -->
-
-<!-- BB -->
-
-<!-- ## Column A2 -->
-
-<!-- CC -->
-<!-- -------------------------- --> 
-
-<!-- # Header B {.tabset} -->
-
-<!-- ## Column B1 -->
 
