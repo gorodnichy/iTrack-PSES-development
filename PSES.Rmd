@@ -50,8 +50,8 @@ myLevel=getLevel(myID)
 ```{r PSES-3-ByDept.Rmd, child = 'PSES-3-ByDept.Rmd'}
 ```
 
-<!-- ```{r PSES-2-ByQuestion.Rmd, child = 'PSES-2-ByQuestion.Rmd'} -->
-<!-- ``` -->
+```{r PSES-2-ByQuestion.Rmd, child = 'PSES-2-ByQuestion.Rmd'}
+```
 
 
 <!-- ```{r PSES--byYear.Rmd, child = 'PSES-4-byYear.Rmd'} -->
@@ -65,15 +65,15 @@ myLevel=getLevel(myID)
 <!-- ``` -->
 
 
-<!-- ```{r PSES--end.Rmd, child = 'PSES-7-End.Rmd'} -->
-<!-- ``` -->
+```{r PSES--end.Rmd, child = 'PSES-7-End.Rmd'}
+```
 
 
-<!-- ```{r PSES--report.Rmd, child = 'PSES-8-FAQ.Rmd'} -->
-<!-- ``` -->
+```{r PSES--report.Rmd, child = 'PSES-8-FAQ.Rmd'}
+```
 
 
-<!-- ```{r PSES--ReleaseNotes.Rmd, child = 'PSES-z-ReleaseNotes.Rmd'} -->
-<!-- ``` -->
+```{r PSES--ReleaseNotes.Rmd, child = 'PSES-z-ReleaseNotes.Rmd'}
+```
 
 

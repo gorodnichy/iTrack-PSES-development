@@ -3,8 +3,8 @@
 # load data in 'global' chunk so it can be shared by all users of the dashboard
 
 source("PSES_functions.R")
-#source("PSES_plotFunctions.R")
-#source("readSED+QuestionMapping.R") # PSES-read-question-mapping.R")
+source("PSES_plotFunctions.R")
+source("readSED+QuestionMapping.R") # PSES-read-question-mapping.R")
 readPsesData()
 pses.selectInput()
 input

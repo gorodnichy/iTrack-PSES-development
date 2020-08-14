@@ -11,7 +11,7 @@ Not enough data for selected Department.  Please contact the developer.
 
 ### Score by Question {data-height=600} 
 
-```{r plot.Questions_vs_Scores}
+```{r}
 
 renderPlot({
   

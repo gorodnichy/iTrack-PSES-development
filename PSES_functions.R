@@ -448,7 +448,7 @@ createPsesQuestions <- function() {
   dtQuestions <- read_excel(strUrlDocumentation2018local, sheet=3) %>% data.table();
   
   dtQuestions[,.N];   dtQuestions %>% names
-  dtQuestions$Français <- NULL
+  # dtQuestions$Français <- NULL
   setnames(dtQuestions, c("QUESTION", "Question"))
   
   assignThemesToQuestions <- function(.dtQuestions) {
