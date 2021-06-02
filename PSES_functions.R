@@ -332,11 +332,12 @@ createPsesDepartments <- function() {
   # strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx" # 2018 code 
   strUrlDocumentation2020local <- "source-data-2020/2020-pses-supporting-documentation_document-de-reference-du-saff-2020.xlsx" # 2020 code
   # dtDepartments <- read_excel(strUrlDocumentation2018local, sheet=6) %>% data.table(); # 2018 code
-  dtDepartments <- read_excel(strUrlDocumentation2020local, sheet=7) %>% data.table(); # 2020 code
+  dtDepartments <- read_excel(strUrlDocumentation2020local, sheet=7) %>% data.table(); # 2020 code, I think we need sheet 7 here - Tim
   
   dtDepartments
   dtDepartments[, .N]; dtDepartments %>% names
   # dtDepartments$`DESCRIPTION FR` <- NULL # 2018 code
+  # 3 columns to remove
   dtDepartments$`Liste des unités organisationnelles` <- NULL # 2020 code
   dtDepartments$`Number of employees / Nombre d'employés` <- NULL # 2020 code
   dtDepartments$`...9` <- NULL # 2020 code
@@ -483,7 +484,12 @@ createPsesQuestions <- function() {
 
     lTheme[[8]] <- list(Qs=c("Q67","Q71",'Q72', "Q73"), str ="Phoenix & Pay issues") # "70"
     
-    # NEW THEMES 2020 # TODO
+    # NEW THEMES 2020 # TODO - I think the 2020 themes are rethought. Need to update this
+    # Themes are:
+    # [1] "My Job"                             "My Work Unit"                 "My Immediate Supervisor"     
+    # [4] "Senior Management"            "My Organization"              "Mobility and Retention"      
+    # [7] "Harassment"                   "Discrimination"               "Stress and Well-being"       
+    # [10] "Duty to Accommodate"
     
     
     # dtPSES[str_length(QUESTION)<=3 & SCORE100>100, .N, QUESTION]$QUESTION 
@@ -491,7 +497,7 @@ createPsesQuestions <- function() {
     # 
     if (F) {
       
-      # REDUNDANT 
+      # REDUNDANT
       aQuestions22 <- c("Q06", "Q18", "Q19", "Q20", 
                         "Q23", "Q24", "Q26", 
                         "Q28", "Q29", "Q30", "Q31", "Q32", 
@@ -597,6 +603,41 @@ createPsesScores <- function() {
     if (F) {
       strFile <- "source-data/PSES-SED-2011-2018.xls" 
       dtQmapping <- read_excel(strFile, sheet=4) %>% data.table()
+      
+      
+      # we need concordance matrix for 2008-2020. We have 2008-2018 already ^. 
+      
+      ## Code for 2020 Concordance Matrix ####
+      # library(rvest)
+      # library(dplyr)
+      # url2020 <- "https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey/2020/2020-public-service-employee-survey-question-number-concordance.html"
+      # file <- read_html(url2020)
+      # tables2020 <- html_nodes(file, "table")
+      # table12020 <- html_table(tables2020[1], fill = TRUE)
+      # names(table12020[[1]]) <- c("Question", "pses2020", "pses2019", "pses2018", "pses2017", "pses2014")
+      # concord_2020 <- table12020[[1]][c(-1, -2), -1]
+      # concord_2020 <-
+      #   concord_2020 %>%
+      #   mutate(across(where(is.character), ~na_if(., "N/A")))
+      # 
+      # url2018 <- "https://www.canada.ca/en/treasury-board-secretariat/services/innovation/public-service-employee-survey/2018/question-number-concordance-past-surveys-2018.html"
+      # file <- read_html(url2018)
+      # tables2018 <- html_nodes(file, "table")
+      # table12018 <- html_table(tables2018[1], fill = TRUE)
+      # concord_2018 <-
+      #   table12018[[1]][c(-1, -nrow(table12018[[1]])), c(-1, -4)]
+      # names(concord_2018) <- c("pses2018", "pses2017", "pses2014", "pses2011", "pses2008")
+      # concord_2018 <-
+      #   concord_2018 %>%
+      #   mutate(across(where(is.character), ~na_if(., "N/A")))
+      # 
+      # concord_full <- left_join(concord_2020, concord_2018)
+      # 
+      # write.csv(concord_full, "source-data-2020/concordance_matrix_2020.csv")
+      ##
+      
+      strFile2020 <- "source-data-2020/concordance_matrix_2020.csv"
+      dtQmapping2020 <- read.csv(strFile2020)[, -1] %>% data.table()
       
       cols <- c("n2018", "n2017","n2017a","n2014","n2011","n2008")
       setnames(dtQmapping,c("Question", cols))
