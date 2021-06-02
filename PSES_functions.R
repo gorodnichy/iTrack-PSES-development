@@ -1,3 +1,8 @@
+# 2020 documentation
+# https://open.canada.ca/data/dataset/4301f4bb-1daa-4b50-afab-d1193b5d2284/resource/25076d6a-84c0-48d0-97a9-f9d20ec2a10d/download/2020-pses-supporting-documentation_document-de-reference-du-saff-2020.xlsx
+# 2020 data
+# https://open.canada.ca/data/dataset/4301f4bb-1daa-4b50-afab-d1193b5d2284/resource/8bf75d4b-a80d-4828-839a-bf8c0b76af51/download/2020-public-service-employee-survey-open-dataset-ensemble-de-donnees-ouvertes-du-sondage-aupres-.csv
+
 # source("PSES_functions.R")
 # Trying to fix July 6 2019
 
@@ -324,13 +329,19 @@ if (F) { # NOT DONE
 
 createPsesDepartments <- function() {
   
-  strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
-  dtDepartments <- read_excel(strUrlDocumentation2018local, sheet=6) %>% data.table();
+  # strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx" # 2018 code 
+  strUrlDocumentation2020local <- "source-data-2020/2020-pses-supporting-documentation_document-de-reference-du-saff-2020.xlsx" # 2020 code
+  # dtDepartments <- read_excel(strUrlDocumentation2018local, sheet=6) %>% data.table(); # 2018 code
+  dtDepartments <- read_excel(strUrlDocumentation2020local, sheet=7) %>% data.table(); # 2020 code
   
   dtDepartments
   dtDepartments[, .N]; dtDepartments %>% names
-  dtDepartments$`DESCRIPTION FR` <- NULL
-  setnames(dtDepartments, old="DESCRIPTION ENG", new="Organization")
+  # dtDepartments$`DESCRIPTION FR` <- NULL # 2018 code
+  dtDepartments$`Liste des unités organisationnelles` <- NULL # 2020 code
+  dtDepartments$`Number of employees / Nombre d'employés` <- NULL # 2020 code
+  dtDepartments$`...9` <- NULL # 2020 code
+  # setnames(dtDepartments, old="DESCRIPTION ENG", new="Organization") # 2018 code
+  setnames(dtDepartments, old = "Organizational unit list", new = "Organization") # 2020 code
   dtDepartments[1]
   cols <- c("LEVEL1ID", "LEVEL2ID", "LEVEL3ID", "LEVEL4ID", "LEVEL5ID" )
   cols=1:5; 
@@ -418,10 +429,10 @@ createPsesDepartments <- function() {
   # .[ remove 999. ie. "I can't find my unit"] -----
   
   # .. Test Uniqueness of names,Org,pathString-----
-  dtDepartments %>% nrow() # [1] 2404
-  dtDepartments$Organization %>% unique() %>% length()# [1] 2177
-  dtDepartments$pathString %>% unique() %>% length()# [1] 2206 2267
-  dtDepartments$AADD %>% unique() %>% length()# [1] 1997
+  dtDepartments %>% nrow() # [1] 2404 (2018), [1] 3679 (2020)
+  dtDepartments$Organization %>% unique() %>% length()# [1] 2177 (2018), [1] 3354 (2020)
+  dtDepartments$pathString %>% unique() %>% length()# [1] 2206 2267 (2018), [1] 3187 (2020)
+  dtDepartments$AADD %>% unique() %>% length()# [1] 1997 (2018), [1] 2936 (2020)
   
   samePaths <- dtDepartments[, .N, by=pathString][N>1]$pathString
   dtDepartments[pathString %in% samePaths]
@@ -445,10 +456,12 @@ if (F)
 createPsesQuestions <- function() {
   
   strUrlDocumentation2018local  <- "source-data/2018_PSES_Supporting_Documentation_Document_de_référence_du_SAFF_2018.xlsx"
+  # strURLDocumentation2020local <- "source-data-2020/2020-pses-supporting-documentation_document-de-reference-du-saff-2020.xlsx"
   dtQuestions <- read_excel(strUrlDocumentation2018local, sheet=3) %>% data.table();
+  # dtQuestions <- read_excel(strUrlDocumentation2020local, sheet=3) %>% data.table();
   
   dtQuestions[,.N];   dtQuestions %>% names
-  # dtQuestions$Français <- NULL
+  dtQuestions$Français <- NULL
   setnames(dtQuestions, c("QUESTION", "Question"))
   
   assignThemesToQuestions <- function(.dtQuestions) {
@@ -457,17 +470,20 @@ createPsesQuestions <- function() {
     # 43: Would you recommend
     
     lTheme <- list()
+    
+    # OLD THEMES 2018
     lTheme[[6]] <- list(Qs=c("Q06", "Q18", "Q19", "Q20"), str = "Performance management")
     lTheme[[5]] <- list(Qs=c("Q23", "Q24", "Q26"), str = "My Immediate Supervisor")
     lTheme[[4]] <- list(Qs=c("Q28", "Q29", "Q30", "Q31", "Q32"), str = "Senior Management") # ==
     lTheme[[3]] <- list(Qs=c("Q33", "Q34", "Q36", "Q37", "Q40"), str = "Ethical Workplace")
     lTheme[[2]] <- list(Qs=c("Q41",  "Q44", "Q45", "Q64","Q65"), str = "Respectful & Healthy Workplace") #"Q42", "Q43",
     lTheme[[7]] <- list(Qs=c("Q48","Q54","Q55","Q60",'Q61'), str ="Harassment & Discrimination") #
-    
+
     lTheme[[1]] <- list(Qs=c("Q42","Q43","Q44","Q63",'Q66'), str ="Stress and Overall") # Overall Environment"
-    
+
     lTheme[[8]] <- list(Qs=c("Q67","Q71",'Q72', "Q73"), str ="Phoenix & Pay issues") # "70"
     
+    # NEW THEMES 2020 # TODO
     
     
     # dtPSES[str_length(QUESTION)<=3 & SCORE100>100, .N, QUESTION]$QUESTION 
@@ -556,11 +572,14 @@ createPsesScores <- function() {
   
   if (F) {  # I. Read 2018 only  ----
     strUrl2018local <- "source-data/2018_PSES_open_dataset_Ensemble_de_données_ouvertes_du_SAFF_2018.csv"
-    dtPSES <<- fread(strUrl2018local); 
+    # strUrl2020local <- "source-data-2020/2020-public-service-employee-survey-open-dataset-ensemble-de-donnees-ouvertes-du-sondage-aupres-.csv"
+    dtPSES <<- fread(strUrl2018local);
+    # dtPSES <<- fread(strUrl2020local); 
     
     if (T) { # . Keep 2018 only 
       dtPSES[ , .N, by = SURVEYR]
-      dtPSES[SURVEYR == 2018 ] # 1062480:  
+      dtPSES[SURVEYR == 2018 ] # 1062480 # 2018 code
+      # dtPSES[SURVEYR == 2020 ] # 1751221 # 2020 code
       ## dtPSES <<- dtPSES [SURVEYR==2018] 
     }
   } else { # II. Read 2011-2018 files ---- 
@@ -832,6 +851,8 @@ if (F)
 ######################################################## #
 ######################################################## #
 #readDataFromOpenCanada <- function() {
+#strUrl2020 <- # 2018-2020
+# "https://open.canada.ca/data/dataset/4301f4bb-1daa-4b50-afab-d1193b5d2284/resource/8bf75d4b-a80d-4828-839a-bf8c0b76af51/download/2020-public-service-employee-survey-open-dataset-ensemble-de-donnees-ouvertes-du-sondage-aupres-.csv"
 #  NEVER read URL for now
 # strUrlDocumentation2018 <- 
 #   "https://www.canada.ca/content/dam/tbs-sct/documents/datasets/pses-saff/2018/2018_PSES_Supporting_Documentation_Document_de_r%C3%A9f%C3%A9rence_du_SAFF_2018.xlsx"
