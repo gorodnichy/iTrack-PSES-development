@@ -2,9 +2,11 @@
 
 # iTrack PSES
  
-Full Development Code for iTrack PSES Web App: Public Service Employee Survey (PSES) Results Interactive Tracker (<https://itrack.shinyapps.io/PSES> and )
+Full Development Code for iTrack PSES Web App: Public Service Employee Survey (PSES) Results Interactive Tracker: <https://open-canada.github.io/Apps/pses> (<https://itrack.shinyapps.io/PSES> and <https://itrack.shinyapps.io/PSES/PSES-CBSA-SE>).
 
 Re-use of codes and contributions are welcome!
+
+For other Web Apps developped by Dmitry Gorodnichy with his GC colleagues, visit: <https://open-canada.github.io/Apps>
 
 ## Raison d'etre 
 -------------
